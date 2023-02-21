@@ -1,0 +1,255 @@
+.sipmovil-br{
+  bottom: 0px;
+  margin: 20px;
+  position: fixed;
+  right: 0px;
+}
+
+.sipmovil-call-button{
+  border-radius: 25px;  
+  font-size: 25px;  
+  height: 50px;
+  line-height: 25px;
+  width: 50px;
+  z-index: 1500;    
+}
+
+/* Begin styles for call options */
+.sipmovil-caller-container{
+  background: #f9f9f9;
+  bottom: 0px;
+  color: black;
+  height: 290px;
+  position: fixed;  
+  right: 0px;
+  width: 270px;   
+  z-index: 150;
+}
+.sipmovil-caller-container.sipmovil-toggled{
+  height: 40px;
+}
+
+.sipmovil-call-option-container{
+  background: #f9f9f9;
+  border-bottom-right-radius: 25px!important;
+  box-shadow: 0 3px 4px 0 rgba(94,94,94,.7);
+  padding-bottom: 30px;
+  padding-top: 15px;
+  z-index: 1450;
+}
+
+.sipmovil-call-option-container ul{
+  list-style: none;
+  padding: 0px
+}
+
+.sipmovil-call-option-container li{
+  cursor: pointer;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.sipmovil-call-option-container li:hover{
+  background: rgba(0,114,216,0.5);
+}
+/* End styles for call options */
+
+/* Begin styles for call in progress */
+.sipmovil-caller-header{
+  display: flex;
+  height: 40px;
+  padding: 5px; 
+  padding-left: 15px; 
+  padding-right: 15px;  
+}
+.sipmovil-caller-header.sipmovil-header-dismiss{
+  cursor: pointer;
+}
+#sipmovil-caller-dismiss{
+  cursor: pointer;
+}
+.sipmovil-caller-header .company-avatar{
+  margin-bottom: auto;
+  margin-top: auto;
+  width: 15%;
+}
+.sipmovil-caller-header img{
+  width: 30px;
+  border-radius: 15px;
+}
+.sipmovil-caller-header .sipmovil-company-text{
+  font-size: 20px;
+  font-weight: 400;
+  margin-bottom: auto;
+  margin-top: auto;
+  width: 70%;
+}
+.sipmovil-caller-header .header-icons{
+  font-weight: 600;
+  margin-bottom: auto;
+  margin-top: auto;
+  width: 15%;
+}
+
+
+.sipmovil-caller-content{
+  background: rgb(247,247,247);
+  height: 80%;
+  font-size: 10px;
+  overflow-y: auto;
+  padding: 5px;  
+}
+.sipmovil-caller-content.sipmovil-toggled{
+  display: none;
+}
+
+.sipmovil-caller-content .sipmovil-call-screen{
+  padding-top: 15px;
+}
+.sipmovil-caller-content .sipmovilcall-main-container{
+  display: flex;
+  text-align: center;
+}
+.sipmovil-avatar-container{
+  width: 50%;
+}
+.sipmovil-avatar-container.sipmovil-toggled{
+  width: 100%;
+}
+.sipmovil-avatar-container img{ 
+  border-radius: 60px;
+  border: 1px solid rgb(218, 225, 232);
+  height: 120px;
+  width: 120px;
+}
+
+.sipmovil-dialpad{
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  width: 50%;
+}
+.sipmovil-dialpad.sipmovil-toggled{
+  display: none;
+}
+.sipmovil-caller-content .key-row{
+  display: flex;
+  height: 25%;
+  justify-content: space-around;
+  padding: 2px;
+  width: 100%;
+  
+}
+.sipmovil-caller-content .dial-key{
+  background: #e0e0e0;
+  border: 2px solid #c0c0c0;
+  border-radius: 5px;
+  color: #606060;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500; 
+  width: 30px; 
+}
+
+.sipmovil-caller-content .button-container{
+  display: flex;
+  justify-content: space-around;
+  padding: 10px;
+  padding-left: 25px;
+  padding-right: 25px;
+  width: 100%;
+
+}
+.sipmovil-caller-content .rounded-button{ 
+  border-radius: 12px;
+  color: #404040;
+  cursor: pointer;
+  font-size: 15px;
+  height: 24px;
+  line-height: 15px;
+  padding-top: 5px;
+  text-align: center;
+  width: 24px;    
+}
+.sipmovil-caller-content .rounded-button.sipmovil-toggled{
+  background: #0771db;
+  color: white;
+}
+.sipmovil-caller-content .rounded-button:hover{
+  background: #e0e0e0;
+}
+.sipmovil-caller-content .volumeControl{
+  padding-top: 6px;
+  width: 40%;
+}
+.sipmovil-caller-content .slider{
+  width: 100%;
+  height: 12px;
+  -webkit-appearance: none;
+  background: #efefef;
+  border: 1px solid #b2b2b2;
+  border-radius: 3px;
+  outline: none;
+  overflow: hidden;
+}
+.sipmovil-caller-content .slider::-webkit-slider-thumb {
+ -webkit-appearance: none;
+  width: 10px; /* 1 */
+  height: 12px;
+  background: #fff;
+  box-shadow: -100vw 0 0 100vw red; /* color personalizado */
+  border: 2px solid #999;  
+}
+
+.sipmovil-timer-container{
+  padding-bottom: 6px;
+  text-align: center
+}
+.sipmovil-timer-container span{
+  color: #404040;
+  font-size: 20px;
+}
+
+.sipmovil-container-info{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.sipmovil-main-message{
+  color: #404040;
+  font-size: 22px;
+  height: 30px;
+}
+.sipmovil-secondary-message{
+  color: #404040;
+  font-size: 12px;
+  height: 130px;
+  padding-top: 120px;
+}
+.sipmovil-button-close{  
+  font-size: 15px;
+  margin-top: 33px;
+      margin-left: 80px;
+    margin-right: 80px;
+    border-radius: 5px;
+}
+.sipmovil-button-close span{
+  /*background: #0771db;*/
+  border-radius: 5px;
+  /*color: white;*/
+  cursor: pointer;
+  padding-bottom: 2px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 2px; 
+}
+
+
+.sipmovil-caller-container.toggled{
+  height: auto;
+  cursor: pointer;
+}
+.sipmovil-caller-container .toggled{
+  display: none;
+}
+/* End styles for call in progress */
