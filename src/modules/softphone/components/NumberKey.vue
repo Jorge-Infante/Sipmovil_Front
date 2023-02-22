@@ -1,14 +1,14 @@
 <script>
-import {mapState}  from "vuex"
+import { mapState, mapActions } from "vuex";
 
-console.log('Number key mounted');
+console.log("Number key mounted");
 
 export default {
   props: {
     keyData: {
       type: Object,
       required: true,
-    }
+    },
   },
   data() {
     return {
@@ -20,23 +20,25 @@ export default {
     };
   },
   methods: {
+    ...mapActions("softphone_store", ["pressDigit"]),
     appendDigit() {
       console.log("appendDigit");
-      this.$store.dispatch("pressDigit", this.digit);
+      this.pressDigit(this.digit);
+      // this.$store.dispatch("pressDigit", this.digit);
     },
   },
   computed: {
     digit() {
-      if (this.keyData){
+      if (this.keyData) {
         return String(this.keyData.digit);
       }
       //Sino no retornará nada
-      return null
+      return null;
     },
     smallSize() {
       return this.$store.state.phoneSmall;
     },
-    ...mapState('softphone_store',["isMobileDevice"]),
+    ...mapState("softphone_store", ["isMobileDevice"]),
   },
   directives: {
     longpressed: {

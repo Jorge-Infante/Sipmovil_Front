@@ -1,5 +1,6 @@
 <script>
-import {mapState}  from "vuex"
+import vueApp from "@/store";
+import {mapState,mapActions}  from "vuex"
 import NumberKey from "./NumberKey.vue";
 
 console.log('Key board mounted');
@@ -46,19 +47,20 @@ export default {
     }
   },
   methods: {
+    ...mapActions('softphone_store',['outgoingCall']),
     removeDigit () {
       console.log("removeDigit");
-      this.$store.commit('REMOVE_DIGIT')
+      vueApp.commit('softphone_store/REMOVE_DIGIT')
     },
     updateNumber (event) {
       console.log("mi valor real:",event.target.value);
-      this.$store.commit('SET_PHONE_STATE', { phoneVar: 'callNumber', phoneState: event.target.value})
+      vueApp.commit('softphone_store/SET_PHONE_STATE', { phoneVar: 'callNumber', phoneState: event.target.value})
     },
     doCall () { 
       console.log("doCall");     
       // disable input to prevent multiple outgoing calls
-      this.$store.commit('SET_PHONE_STATE', { phoneVar: 'disableInput', phoneState: true })
-      this.$store.dispatch('outgoingCall')
+      vueApp.commit('softphone_store/SET_PHONE_STATE', { phoneVar: 'disableInput', phoneState: true })
+      this.outgoingCall()
     }
   },
   computed: {

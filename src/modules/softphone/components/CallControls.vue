@@ -1,6 +1,7 @@
 <script>
-import {mapState}  from "vuex"
-console.log('CallControls mounted');
+import { mapState, mapActions } from "vuex";
+import vueApp from "@/store";
+console.log("CallControls mounted");
 export default {
   data() {
     return {
@@ -71,7 +72,7 @@ export default {
     };
   },
   computed: {
-    ...mapState('softphone_store',[
+    ...mapState("softphone_store", [
       "userInCall",
       "callInProgress",
       "callNumber",
@@ -89,21 +90,32 @@ export default {
       "disableCallHangUp",
     ]),
     keyboardActive() {
-      console.log('keyboard active');
+      console.log("keyboard active");
       return this.$store.state.keyboardActive ? "#007bff" : "#272727";
     },
   },
   methods: {
+    ...mapActions("softphone_store", [
+      "getLastNumber",
+      "preTranslateNumber",
+      "outgoingCall",
+      "hangupCall",
+      "showDialog",
+      "warnTranferAction",
+      "pressMute",
+      "pressHold",
+      "acceptCall"
+    ]),
     toggleMute() {
-      console.log('toogle mute');
-      this.$store.dispatch("pressMute");
+      console.log("toogle mute");
+      this.pressMute()
     },
     toggleHold() {
-      console.log('toggle hold');
-      this.$store.dispatch("pressHold");
+      console.log("toggle hold");
+      this.pressHold()
     },
     toggleKeyboard() {
-      console.log('toogle keyboard');
+      console.log("toogle keyboard");
       const keyboardState = !this.$store.state.keyboardActive;
       this.$store.commit("SET_PHONE_STATE", {
         phoneVar: "keyboardActive",
@@ -114,29 +126,29 @@ export default {
       console.log("do call enter VUE boton answer");
       // disable answer button to prevent multiple actions
       if (this.callNumber != "") {
-        this.$store.commit("SET_PHONE_STATE", {
+        vueApp.commit("softphone_store/SET_PHONE_STATE", {
           phoneVar: "disableCallAnswer",
           phoneState: true,
         });
       }
 
-      if (this.$store.state.callDirection == "INCOMING") {
-        this.$store.dispatch("acceptCall");
+      if (vueApp.state.softphone_store.callDirection == "INCOMING") {
+        this.acceptCall()
         // set vue state to indicate asterisk that it is the session that holds the call
-        this.$store.commit("SET_PHONE_STATE", {
+        vueApp.commit("softphone_store/SET_PHONE_STATE", {
           phoneVar: "currentCallSession",
           phoneState: true,
         });
         if (this.isTransferInvited == true) {
-          this.$store.commit("SET_PHONE_STATE", {
+          vueApp.commit("softphone_store/SET_PHONE_STATE", {
             phoneVar: "isTransferInvited",
             phoneState: false,
           });
-          this.$store.commit("SET_PHONE_STATE", {
+          vueApp.commit("softphone_store/SET_PHONE_STATE", {
             phoneVar: "transferCallId",
             phoneState: "",
           });
-          this.$store.commit("SET_PHONE_STATE", {
+          vueApp.commit("softphone_store/SET_PHONE_STATE", {
             phoneVar: "transferType",
             phoneState: "",
           });
@@ -144,16 +156,16 @@ export default {
       } else {
         if (this.callNumber == "") {
           console.log("entro callNumber componnete");
-          this.$store.dispatch("getLastNumber");
+          this.getLastNumber()
         } else {
-          this.$store.dispatch("preTranslateNumber");
-          this.$store.dispatch("outgoingCall");
+          this.preTranslateNumber()
+          this.outgoingCall()
         }
       }
     },
     hangup() {
       // disable hangup button to prevent multiple actions
-      this.$store.commit("SET_PHONE_STATE", {
+      vueApp.commit("softphone_store/SET_PHONE_STATE", {
         phoneVar: "disableCallHangUp",
         phoneState: true,
       });
@@ -166,7 +178,7 @@ export default {
       // if (this.isTransferInvited == true) {
       //   this.$store.dispatch('rejecttranferInvitation')
       // }
-      this.$store.dispatch("hangupCall");
+      this.hangupCall()
     },
     showDialog(type) {
       if (
@@ -178,10 +190,10 @@ export default {
         // );
         return;
       }
-      this.$store.dispatch("showDialog", type);
+      this.showDialog(type)
     },
     warnTranferAction(phase) {
-      this.$store.dispatch("warnTranferAction", phase);
+      this.warnTranferAction(phase)
     },
   },
 };

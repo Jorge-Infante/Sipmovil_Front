@@ -1,7 +1,5 @@
 <template>
-  <v-app>
-    <Phone />
-  </v-app>
+  <Phone />
 </template>
 
 <script>
