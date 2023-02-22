@@ -46,7 +46,7 @@ export default {
     },
   },
   computed: {
-    ...mapState('softphone_store',[
+    ...mapState("softphone_store", [
       "showCallStatistics",
       "inCallPeers",
       "isMobileDevice",
@@ -99,77 +99,83 @@ export default {
           :style="{ height: 'fit-content', paddingLeft: '5px' }"
         ></v-list-subheader>
 
-        <template v-for="(item, index) in inCallPeers" :key="item.extension">
-          <v-divider
-            v-if="index > 0"
-            :key="index"
-            :style="{ background: 'rgb(255,255,255,0.5)' }"
-          ></v-divider>
+        <div v-for="(item, index) in inCallPeers" :key="item.extension">
+          <template>
+            <v-divider
+              v-if="index > 0"
+              :key="index"
+              :style="{ background: 'rgb(255,255,255,0.5)' }"
+            ></v-divider>
 
-          <v-list-item :style="{ paddingLeft: '5px' }">
-            <v-avatar
-              >v-list-item-content
-              <v-img
-                :src="item.avatar"
-                :style="{
-                  width: isMobileDevice ? '3vh' : '40px',
-                  height: isMobileDevice ? '6vh' : '40px',
-                }"
-              ></v-img>
-            </v-avatar>
+            <v-list-item :style="{ paddingLeft: '5px' }">
+              <v-avatar
+                >v-list-item-content
+                <v-img
+                  :src="item.avatar"
+                  :style="{
+                    width: isMobileDevice ? '3vh' : '40px',
+                    height: isMobileDevice ? '6vh' : '40px',
+                  }"
+                ></v-img>
+              </v-avatar>
 
-            <v-list-item-title
-              >{{ item.name }} &lt;{{ item.extension }}></v-list-item-title
-            >
-            <v-list-item-subtitle :style="{ fontSize: '12px' }">
-              <span class="text--primary" v-if="index == 0"
-                >Local Address : {{ item.localIp }}</span
-              ><br v-if="index == 0" />
-              <span class="text--primary"
-                >Packet
-                {{
-                  item.statDirection == "outbound" ? "Sent" : "Received"
-                }}</span
+              <v-list-item-title
+                >{{ item.name }} &lt;{{ item.extension }}></v-list-item-title
               >
-              :
-              {{
-                item.statDirection == "outbound"
-                  ? item.packetsSent
-                  : item.packetsReceived
-              }}
-              <br />
-              <span class="text--primary">Packets Rate</span> :
-              {{ item.packetsRate }} p/s<br />
-              <span class="text--primary"
-                >Bytes
+              <v-list-item-subtitle :style="{ fontSize: '12px' }">
+                <span class="text--primary" v-if="index == 0"
+                  >Local Address : {{ item.localIp }}</span
+                ><br v-if="index == 0" />
+                <span class="text--primary"
+                  >Packet
+                  {{
+                    item.statDirection == "outbound" ? "Sent" : "Received"
+                  }}</span
+                >
+                :
                 {{
-                  item.statDirection == "outbound" ? "Sent" : "Received"
-                }}</span
-              >
-              :
-              {{
-                item.statDirection == "outbound"
-                  ? item.bytesSent
-                  : item.bytesReceived
-              }}
-              <br />
-              <span class="text--primary">Byte Rate</span> :
-              {{ item.byteRate }} bytes/s<br />
-              <span class="text--primary" v-if="item.statDirection == 'inbound'"
-                >Packet Loss</span
-              ><span v-if="item.statDirection == 'inbound'">
-                : {{ !!item.packetLoss ? item.packetLoss : 0 }} </span
-              ><br v-if="item.statDirection == 'inbound'" />
-              <span class="text--primary" v-if="item.statDirection == 'inbound'"
-                >Jitter</span
-              ><span v-if="item.statDirection == 'inbound'">
-                : {{ item.jitter }} </span
-              ><br v-if="item.statDirection == 'inbound'" />
-              <span class="text--primary">AudioSSRC</span> : {{ item.ssrc }}
-              <br />
-            </v-list-item-subtitle>
-          </v-list-item>
-        </template>
+                  item.statDirection == "outbound"
+                    ? item.packetsSent
+                    : item.packetsReceived
+                }}
+                <br />
+                <span class="text--primary">Packets Rate</span> :
+                {{ item.packetsRate }} p/s<br />
+                <span class="text--primary"
+                  >Bytes
+                  {{
+                    item.statDirection == "outbound" ? "Sent" : "Received"
+                  }}</span
+                >
+                :
+                {{
+                  item.statDirection == "outbound"
+                    ? item.bytesSent
+                    : item.bytesReceived
+                }}
+                <br />
+                <span class="text--primary">Byte Rate</span> :
+                {{ item.byteRate }} bytes/s<br />
+                <span
+                  class="text--primary"
+                  v-if="item.statDirection == 'inbound'"
+                  >Packet Loss</span
+                ><span v-if="item.statDirection == 'inbound'">
+                  : {{ !!item.packetLoss ? item.packetLoss : 0 }} </span
+                ><br v-if="item.statDirection == 'inbound'" />
+                <span
+                  class="text--primary"
+                  v-if="item.statDirection == 'inbound'"
+                  >Jitter</span
+                ><span v-if="item.statDirection == 'inbound'">
+                  : {{ item.jitter }} </span
+                ><br v-if="item.statDirection == 'inbound'" />
+                <span class="text--primary">AudioSSRC</span> : {{ item.ssrc }}
+                <br />
+              </v-list-item-subtitle>
+            </v-list-item>
+          </template>
+        </div>
       </v-list>
     </v-row>
   </transition>

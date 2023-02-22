@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
+    "serve": "vue-cli-service serve --https true",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
@@ -14,6 +14,7 @@
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
     "roboto-fontface": "*",
+    "sip.js": "^0.21.2",
     "vue": "^3.2.13",
     "vuetify": "^3.0.0-beta.0",
     "vuex": "^4.1.0",
@@ -26,7 +27,8 @@
     "@vue/cli-plugin-eslint": "~5.0.0",
     "@vue/cli-service": "~5.0.0",
     "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-vue": "^9.9.0",
     "vue-cli-plugin-vuetify": "~2.5.8",
     "webpack-plugin-vuetify": "^2.0.0-alpha.0"
   },

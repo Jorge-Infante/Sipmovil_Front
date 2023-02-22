@@ -1,5 +1,6 @@
 <script>
 import {mapState}  from "vuex"
+import {test} from "@/modules/softphone/ctxsip/ctxSip_config"
 
 console.log('Phone component mounted');
 export default {
@@ -39,6 +40,7 @@ export default {
     KeyBoard
   },
   mounted(){
+    test()
     console.log(extensions);
   }
 };
@@ -48,7 +50,7 @@ import CallScreen from './CallScreen.vue';
 import ConferenceManager from './ConferenceManager.vue';
 import CallControls from './CallControls.vue';
 import KeyBoard from './KeyBoard.vue';
-import extensions  from '../hubspot/CallingExtensions.js'
+import {extensions}  from '../hubspot/CallingExtensions.js'
 </script>
 
 <template>
