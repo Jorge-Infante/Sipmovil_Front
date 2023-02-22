@@ -8,7 +8,8 @@ export const test = () => {
   console.log("SIPPPPP:", SIP);
 };
 
-
+import perreo from 'libs/phone/sounds/outgoing.mp3'
+  
 export const ctxSip = {
   config: {
     password: user.Pass,
@@ -22,7 +23,7 @@ export const ctxSip = {
     },
   },
   // ringtone     : document.getElementById('ringtone'),
-  // ringbacktone : document.getElementById('ringbacktone'),
+  ringbacktone : perreo,
   // dtmfTone     : document.getElementById('dtmfTone'),
 
   Sessions: [],
@@ -91,8 +92,8 @@ export const ctxSip = {
   },
 
   startRingbackTone: function () {
-    //try { ctxSip.ringbacktone.play(); } catch (e) { }
-    console.log("telefono sin ring por ahora");
+    try { ctxSip.ringbacktone.play(); } catch (e) { console.log('backtone fail.......'); }
+    // console.log("telefono sin ring por ahora");
   },
 
   stopRingbackTone: function () {
@@ -131,7 +132,7 @@ export const ctxSip = {
         // changeView('mobile_phone', params);
       }
 
-      vueApp.$store.dispatch("incommingCall", newSess.displayName);
+      vueApp.dispatch("softphone_store/incommingCall", newSess.displayName);
       ctxSip.callActiveID = newSess.ctxid;
     } else {
       console.log("else");
@@ -172,7 +173,7 @@ export const ctxSip = {
     });
 
     newSess.on("accepted", function (e) {
-      console.log(e);
+      console.log('newSess on: ',e);
 
       // If there is another active call, hold it
       let peerConnection = this.mediaHandler.peerConnection;
@@ -181,7 +182,7 @@ export const ctxSip = {
         phoneState: peerConnection,
       });
       // traceLog("Evento accepted", 1);
-      // vueApp.$store.dispatch('convertSDP')
+      vueApp.dispatch('softphone_store/convertSDP')
       vueApp.dispatch("softphone_store/answerCall");
 
       // acciones softphone movil
@@ -240,7 +241,7 @@ export const ctxSip = {
         ctxSip.callActiveID = null;
         newSess = null;
         // restartPhoneControls();
-        vueApp.dispatch("finishCall");
+        vueApp.dispatch("softphone_store/finishCall");
       }
     });
 
@@ -248,13 +249,13 @@ export const ctxSip = {
       console.log(e);
       // traceLog(e);
       // traceLog("Evento bye direccion: ", 1);
-      vueApp.dispatch("finishCall");
+      vueApp.dispatch("softphone_store/finishCall");
       ctxSip.callActiveID = null;
       newSess = null;
     });
 
     newSess.on("failed", function (e) {
-      vueApp.dispatch("finishCall");
+      vueApp.dispatch("softphone_store/finishCall");
       // traceLog("Evento failed direccion: ", 1);
       console.log(e);
     });
@@ -262,7 +263,7 @@ export const ctxSip = {
     newSess.on("rejected", function (e) {
       console.log(e);
       // traceLog("Evento rejected direccion: ", 1)
-      vueApp.dispatch("finishCall");
+      vueApp.dispatch("softphone_store/finishCall");
       ctxSip.callActiveID = null;
       newSess = null;
     });
@@ -316,9 +317,9 @@ export const ctxSip = {
   },
 
   fireDMTFEvent: function (dig) {
-    vueApp.$store.commit("SET_PHONE_STATE", {
+    vueApp.commit("softphone_store/SET_PHONE_STATE", {
       phoneVar: "callNumber",
-      phoneState: vueApp.$store.state.callNumber + dig,
+      phoneState: vueApp.state.softphone_store.callNumber + dig,
     });
   },
 
@@ -561,25 +562,25 @@ ctxSip.phone.on("message", function (e) {
 
     switch (data.event) {
       case "MUTE":
-        vueApp.$store.dispatch("pressMute");
+        vueApp.dispatch("softphone_store/pressMute");
         // addTemporaryAlert('Zoho: teléfono silenciado');
         ctxSip.fireMuteEvent(ctxSip.currentSession.session);
         break;
 
       case "UNMUTE":
-        vueApp.$store.dispatch("pressMute");
+        vueApp.dispatch("softphone_store/pressMute");
         // addTemporaryAlert('Zoho: teléfono con sonido');
         ctxSip.fireUnMuteEvent(ctxSip.currentSession.session);
         break;
 
       case "HOLD":
-        vueApp.$store.dispatch("pressHold");
+        vueApp.dispatch("softphone_store/pressHold");
         // addTemporaryAlert('Zoho: llamada retenida');
         ctxSip.fireHoldEvent();
         break;
 
       case "UNHOLD":
-        vueApp.$store.dispatch("pressHold");
+        vueApp.dispatch("softphone_store/pressHold");
         // addTemporaryAlert('Zoho: llamada liberada');
         ctxSip.fireUnHoldEvent(ctxSip.currentSession.session);
         break;
@@ -591,16 +592,16 @@ ctxSip.phone.on("message", function (e) {
       case "VOICEMESSAGE":
         // $('.voicemail-count').text(data.message_count)
         // $('.voicemail-count').css('display', 'block')
-        vueApp.$store.commit("SHOW_MESSAGE", "Tienes un nuevo correo de voz");
+        vueApp.commit("softphone_store/SHOW_MESSAGE", "Tienes un nuevo correo de voz");
         break;
 
       case "SNACK_MESSAGE":
-        vueApp.$store.commit("SHOW_MESSAGE", data.snack_message);
+        vueApp.commit("softphone_store/SHOW_MESSAGE", data.snack_message);
         break;
 
       case "ANSWER":
         // addTemporaryAlert('Zoho: llamada contestada');
-        vueApp.$store.dispatch("acceptCall");
+        vueApp.dispatch("softphone_store/acceptCall");
         break;
       case "CLICK_TO_DIAL":
         ctxSip.clickToDial = {
@@ -730,27 +731,27 @@ function connectAsteriskSocket() {
       case "CALL_ID":
         ctxSip.currentSession.call_id = data.call_id;
         ctxSip.currentSession.numbers_in_call = data.numbers_in_call;
-        vueApp.$store.dispatch("updateSecondUser", data.numbers_in_call);
-        vueApp.$store.dispatch("restartCallDuration");
+        vueApp.dispatch("softphone_store/updateSecondUser", data.numbers_in_call);
+        vueApp.dispatch("softphone_store/restartCallDuration");
         if ("append_info" in data) {
           // update call info with aditional details
-          vueApp.$store.dispatch("setCallEvents", data.append_info);
+          vueApp.dispatch("softphone_store/setCallEvents", data.append_info);
         }
         break;
 
       case "UPDATE_CALL_EVENTS":
-        vueApp.$store.dispatch("setCallEvents", data.call_events);
+        vueApp.dispatch("softphone_store/setCallEvents", data.call_events);
         break;
 
       case "INVITE_TRANFER":
-        vueApp.$store.dispatch("setTranferParams", {
+        vueApp.dispatch("softphone_store/setTranferParams", {
           callId: data.call_id,
           transferType: data.transfer_type,
         });
         break;
 
       case "WARN_TRANSFER_ATTENDED":
-        vueApp.$store.commit("ACTIVATE_TRANSFER");
+        vueApp.commit("softphone_store/ACTIVATE_TRANSFER");
         break;
 
       case "UPDATE_SOFTPHONE": {
@@ -764,7 +765,7 @@ function connectAsteriskSocket() {
         if (data.label_3 != "no_update") {
           labelData["info"] = data.label_3;
         }
-        vueApp.$store.commit("UPDATE_CALL_INFO", labelData);
+        vueApp.commit("softphone_store/UPDATE_CALL_INFO", labelData);
         break;
       }
       case "UPDATE_CONFERENCE_LABEL": {
@@ -778,7 +779,7 @@ function connectAsteriskSocket() {
         if (data.label_3 != "no_update") {
           conferenceLabel["info"] = data.label_3;
         }
-        vueApp.$store.commit("UPDATE_CONFERENCE_INFO", conferenceLabel);
+        vueApp.commit("softphone_store/UPDATE_CONFERENCE_INFO", conferenceLabel);
         break;
       }
 
@@ -787,13 +788,13 @@ function connectAsteriskSocket() {
         phoneData["status"] = data.label_1;
         phoneData["label"] = data.label_2;
         phoneData["info"] = data.label_3;
-        vueApp.$store.commit("UPDATE_CALL_INFO", phoneData);
+        vueApp.commit("softphone_store/UPDATE_CALL_INFO", phoneData);
         // update conference info
         let conferenceData = {};
         conferenceData["conferenceId"] = data.conference_id;
         conferenceData["conferenceStarted"] = data.conference_started;
         conferenceData["userConferenceRole"] = data.conference_role;
-        vueApp.$store.commit("INIT_CONFERENCE", conferenceData);
+        vueApp.commit("softphone_store/INIT_CONFERENCE", conferenceData);
         break;
       }
 
@@ -802,7 +803,7 @@ function connectAsteriskSocket() {
         memberData["members"] = data.members;
         memberData["conferenceId"] = data.conference_id;
         memberData["extensionAdded"] = data.extension;
-        vueApp.$store.commit("ADD_CONFERENCE_MEMBER", memberData);
+        vueApp.commit("softphone_store/ADD_CONFERENCE_MEMBER", memberData);
         break;
       }
 
@@ -810,7 +811,7 @@ function connectAsteriskSocket() {
         console.log("case REMOVE_CONFERENCE_MEMBER");
         let member = data.member;
         let conferenceId = data.conference_id;
-        vueApp.$store.commit("REMOVE_CONFERENCE_MEMBER", {
+        vueApp.commit("softphone_store/REMOVE_CONFERENCE_MEMBER", {
           member,
           conferenceId,
         });
@@ -820,7 +821,7 @@ function connectAsteriskSocket() {
       // actions for new conference member
       case "SET_INVITED_CHANNEL": {
         let channel_id = data.channel_id;
-        vueApp.$store.commit("SET_PHONE_STATE", {
+        vueApp.commit("softphone_store/SET_PHONE_STATE", {
           phoneVar: "invitedChannel",
           phoneState: channel_id,
         });
@@ -830,7 +831,7 @@ function connectAsteriskSocket() {
       case "INVITED_REJECT": {
         let channel_id = data.channel_id;
         console.log(channel_id);
-        vueApp.$store.commit("INVITED_REJECT");
+        vueApp.commit("softphone_store/INVITED_REJECT");
         break;
       }
 
@@ -840,12 +841,12 @@ function connectAsteriskSocket() {
         invitationData["invitorChannel"] = data.invitor_channel;
         invitationData["invitedChannel"] = data.invited_channel;
         invitationData["invitorEndpoint"] = data.invitor_endpoint;
-        vueApp.$store.commit("RECEIVE_CONFERENCE_INVITATION", invitationData);
+        vueApp.commit("softphone_store/RECEIVE_CONFERENCE_INVITATION", invitationData);
         break;
       }
 
       case "HANGUP_CHANNELS": {
-        vueApp.$store.dispatch("hangupCall");
+        vueApp.dispatch("softphone_store/hangupCall");
         break;
       }
 
@@ -876,7 +877,7 @@ function connectAsteriskSocket() {
       case "VOICEMESSAGE":
         // $('.voicemail-count').text(data.message_count)
         // $('.voicemail-count').css('display', 'block')
-        vueApp.$store.commit("SHOW_MESSAGE", "Tienes un nuevo correo de voz");
+        vueApp.commit("softphone_store/SHOW_MESSAGE", "Tienes un nuevo correo de voz");
         break;
 
       case "ASTERISK_ERROR":

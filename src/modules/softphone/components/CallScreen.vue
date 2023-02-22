@@ -1,6 +1,6 @@
 <script>
 import {mapState}  from "vuex"
-import {mapActions}  from "vuex"
+import {mapActions,mapGetters}  from "vuex"
 
 console.log('CallScren mounted');
 //agregado fake :key="ev"
@@ -82,8 +82,9 @@ export default {
       "callEvents",
       "browserContacts",
     ]),
+    ...mapGetters('softphone_store',['callDurationFormat']),
     callDuration() {
-      return this.$store.getters.callDurationFormat;
+      return this.callDurationFormat
     },
   },
 };

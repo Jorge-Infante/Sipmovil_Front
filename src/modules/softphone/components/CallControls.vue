@@ -116,8 +116,8 @@ export default {
     },
     toggleKeyboard() {
       console.log("toogle keyboard");
-      const keyboardState = !this.$store.state.keyboardActive;
-      this.$store.commit("SET_PHONE_STATE", {
+      const keyboardState = !vueApp.state.softphone_store.keyboardActive;
+      vueApp.commit("softphone_store/SET_PHONE_STATE", {
         phoneVar: "keyboardActive",
         phoneState: keyboardState,
       });
