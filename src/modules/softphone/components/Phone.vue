@@ -41,7 +41,7 @@ export default {
   },
   mounted(){
     test()
-    console.log(extensions);
+    console.log(extensions.onDialNumber);
   }
 };
 import PhoneStatusBar from './PhoneStatusBar.vue';

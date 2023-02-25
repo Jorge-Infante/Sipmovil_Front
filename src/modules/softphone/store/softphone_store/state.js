@@ -77,4 +77,5 @@ export default () => ({
   localDescription: null,
   remoteDescription: null,
   callQuality: -1,
+  ownerId:''
 });

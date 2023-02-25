@@ -15,6 +15,11 @@ export const REMOVE_DIGIT = (state) => {
 export const RESET_NUMBER = (state) => {
   state.callNumber = "";
 };
+export const HUBSPOT_DIAL_NUMBER = (state,{phoneNumber,ownerId})=>{
+  state.callNumber = phoneNumber
+  state.ownerId=ownerId
+};
+
 export const INIT_CALL = (state, number) => {
   if (state.userInCall == true || state.userInConference == true) {
     // alertError('No se puede llamar mientras se esta en una llamada')
