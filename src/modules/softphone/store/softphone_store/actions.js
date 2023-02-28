@@ -1,4 +1,4 @@
-import { apiRequest,apiClient } from "@/api/softphone_api.js";
+import { apiRequest } from "@/api/softphone_api.js";
 import { ctxSip } from "../../ctxsip/ctxSip_config";
 
 export const setCallEvents = ({ commit /*state*/ }, callEvents) => {
@@ -399,11 +399,4 @@ export const showDialog = ({ commit }, type) => {
 export const closeDialog = ({ commit }) => {
   commit("CLOSE_DIALOG");
 };
-export const authUser = async({state})=>{
-  let ownerId = state.ownerId.toString()
-  console.log('MY OWNER_ID ID: ',ownerId);
-  let data= new FormData();
-  data.append('owner_id',ownerId)
-  const res = await apiClient.post('login_hubspot/',data)
-  console.log('My response: ',res);
-};
+

@@ -1,10 +1,11 @@
 import axios from "axios";
 
 export const user = {
-  Display: "113",
-  Pass: "UIXRF939",
+  Display: "112",
+  Pass: "XLEX1L42",
   Realm: "pbxhost0.sipmovil.com",
-  User: "109646401685",
+  Token: "c4a3554cc253be0b3418e10484120d29cecdbe18",
+  User: "102993257017",
   WSServer: "wss://pbxhost0.sipmovil.com:8089/ws",
 };
 
@@ -15,6 +16,14 @@ export const apiClient = axios.create({
     "Content-Type": "application/json",
     Accept: "application/json",
     Authorization: "Token ccbb8ecebd3be1606157ceedc86f179b8123fbfe",
+  },
+});
+export const apiClientForm = axios.create({
+  baseURL: "https://test.sipmovil.com/",
+  withCredentials: false,
+  headers: {
+    "Content-Type": "multipart/form-data",
+    Accept: "application/json",
   },
 });
 

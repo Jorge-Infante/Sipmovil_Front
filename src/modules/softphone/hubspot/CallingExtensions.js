@@ -11,7 +11,7 @@ const options = {
     },
     onDialNumber: (event) => {
       vueApp.commit("softphone_store/HUBSPOT_DIAL_NUMBER", {phoneNumber:event.phoneNumber, ownerId:event.ownerId});
-      vueApp.dispatch("softphone_store/authUser");
+      vueApp.dispatch("auth_store/authUser");
       console.log("onDialNumber: ", event); 
       /* Dial a number */
     },
