@@ -1,6 +1,5 @@
 <script>
 import {mapState}  from "vuex"
-import {test} from "@/modules/softphone/ctxsip/ctxSip_config"
 
 console.log('Phone component mounted');
 export default {
@@ -40,7 +39,6 @@ export default {
     KeyBoard
   },
   mounted(){
-    test()
     console.log(extensions.onDialNumber);
   }
 };

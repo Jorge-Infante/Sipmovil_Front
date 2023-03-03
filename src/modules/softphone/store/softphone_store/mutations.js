@@ -299,3 +299,6 @@ export const INIT_STATISTIC = (state) => {
     });
   }, 1000);
 };
+export const CTXSIP_STATE = (state,ValueCtxsip) =>{
+  state.ctxSip = ValueCtxsip
+};

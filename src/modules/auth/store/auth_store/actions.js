@@ -6,6 +6,8 @@ export const authUser = async ({ commit, rootState }) => {
   data.append("owner_id", ownerId);
   const res = await apiClientForm.post("login_hubspot/", data);
   let user = res.data.value;
+  console.log("All data request: ", user);
+  console.log('hereeee');
 
   let userInfo = {
     Display: user.sipData.extension,
@@ -16,7 +18,7 @@ export const authUser = async ({ commit, rootState }) => {
     Token: user.token,
   };
 
-  console.log("All data request: ", user);
+  
   console.log("My user info: ", userInfo);
   commit("AUTH_USER_INFO", userInfo);
 };

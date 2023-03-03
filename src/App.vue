@@ -1,11 +1,13 @@
 <template>
+
   <Phone />
 </template>
 
 <script>
+import vueApp from "@/store";
 import { defineAsyncComponent } from 'vue';
-import { mapState } from "vuex";
-// import Phone from "./modules/softphone/components/Phone.vue";
+import { mapState } from 'vuex';
+import {ctxSipConfig,ctxSipConfigFunc} from '@/modules/softphone/ctxsip/ctxSip_config'
 export default {
   name: "App",
 
@@ -15,27 +17,19 @@ export default {
 
   data: () => ({}),
   mounted() {
-    console.log("#### user info: ", this.userInfo);
+    console.log('USERINFO VALUE: ',this.userInfo);
   },
-  computed: {
-    ...mapState("auth_store", ["userInfo"]),
-    user() {
-      if (this.userInfo.User!='') {
-        console.log("### retornando false");
-        return true;
-      } else {
-        console.log("### retornando true");
-        return false;
-      }
-    },
-  },
-  updated() {
-    console.log("#### user info: ", this.userInfo);
+  computed:{
+    ...mapState('auth_store',['userInfo'])
   },
   watch: {
-    userInfo(nuevo, viejo) {
-      console.log("viejo", viejo, ":", "nuevo", nuevo);
-    },
-  },
+    userInfo (newUserInfo, oldUserInfo) {
+      console.log('Nuevo: ',newUserInfo, 'Viejo: ',oldUserInfo);
+      let ctxsip=ctxSipConfig(newUserInfo)
+      ctxSipConfigFunc(ctxsip,newUserInfo)
+      console.log('CTXSIP CONFIG: ',ctxsip.config);
+      vueApp.commit('softphone_store/CTXSIP_STATE',ctxsip)
+    }
+  }
 };
 </script>

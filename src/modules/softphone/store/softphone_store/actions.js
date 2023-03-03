@@ -1,5 +1,4 @@
 import { apiRequest } from "@/api/softphone_api.js";
-import { ctxSip } from "../../ctxsip/ctxSip_config";
 
 export const setCallEvents = ({ commit /*state*/ }, callEvents) => {
   let filteredEvents = callEvents.filter(
@@ -28,7 +27,7 @@ export const incommingCall = ({ commit, state }, callNumber) => {
         commit("SET_PHONE_STATE", { phoneVar: "showPhone", phoneState: true });
         commit("UPDATE_CALL_INFO", callInfo);
         commit("START_CALL");
-        ctxSip.startRingTone();
+        state.ctxSip.startRingTone();
       },
       (error) => {
         console.log("Error en incoming call: ", error);
@@ -40,7 +39,7 @@ export const incommingCall = ({ commit, state }, callNumber) => {
         commit("SET_PHONE_STATE", { phoneVar: "showPhone", phoneState: true });
         commit("UPDATE_CALL_INFO", callInfo);
         commit("START_CALL");
-        ctxSip.startRingTone();
+        state.ctxSip.startRingTone();
       }
     );
 };
@@ -83,7 +82,7 @@ export const outgoingCall = ({ commit, state }) => {
         commit("UPDATE_CALL_INFO", callInfo);
         state.showCallButton = false;
         commit("START_CALL");
-        ctxSip.phoneCallButtonPressed();
+        state.ctxSip.phoneCallButtonPressed();
 
         // update second user in outgoing call
         let userInfo = {
@@ -108,7 +107,7 @@ export const outgoingCall = ({ commit, state }) => {
         commit("UPDATE_CALL_INFO", callInfo);
         state.showCallButton = false;
         commit("START_CALL");
-        ctxSip.phoneCallButtonPressed();
+        state.ctxSip.phoneCallButtonPressed();
         console.log(error);
       }
     );
@@ -158,33 +157,33 @@ export const preTranslateNumber = ({ state }) => {
   );
 };
 export const acceptCall = ({ commit, state }) => {
-  ctxSip.clickToDial = null;
-  ctxSip.stopRingTone();
+  state.ctxSip.clickToDial = null;
+  state.ctxSip.stopRingTone();
   state.showCallButton = false;
   commit("UPDATE_CALL_INFO", { status: "Conectando..." });
-  ctxSip.fireAnswerEvent();
+  state.ctxSip.fireAnswerEvent();
 };
 export const answerCall = ({ commit, state }) => {
   console.log(state);
-  ctxSip.clickToDial = null;
+  state.ctxSip.clickToDial = null;
   commit("ANSWER_CALL");
   commit("INIT_STATISTIC");
   commit("UPDATE_CALL_INFO", { status: "En llamada" });
 };
-export const hangupCall = ({ commit }) => {
+export const hangupCall = ({ commit,state }) => {
   console.log("action hangupCall");
-  if (ctxSip.clickToDial) {
+  if (state.ctxSip.clickToDial) {
     // notify zoho click to call rejected
     // vueApp.rejectClickToCall("rejected");
   }
-  ctxSip.sipHangUp(ctxSip.callActiveID);
-  ctxSip.stopRingTone();
+  state.ctxSip.sipHangUp(state.ctxSip.callActiveID);
+  state.ctxSip.stopRingTone();
   commit("HANGUP_CALL");
 };
-export const finishCall = ({ commit }) => {
-  ctxSip.stopRingTone();
-  ctxSip.clickToDial = null;
-  const callInfoSurvey = ctxSip.currentSession.call_id;
+export const finishCall = ({state, commit }) => {
+  state.ctxSip.stopRingTone();
+  state.ctxSip.clickToDial = null;
+  const callInfoSurvey = state.ctxSip.currentSession.call_id;
   if (callInfoSurvey) {
     const [, call_idSurvey] = callInfoSurvey.split(":");
     console.log(call_idSurvey);
@@ -201,15 +200,15 @@ export const finishCall = ({ commit }) => {
 export const pressDigit = ({ commit, state }, digit) => {
   console.log(state);
   commit("APPEND_DIGIT", digit);
-  ctxSip.sipSendDTMF(digit);
+  state.ctxSip.sipSendDTMF(digit);
 };
 export const pressMute = ({ state }) => {
   state.isMuted = !state.isMuted;
-  ctxSip.phoneMuteButtonPressed(ctxSip.callActiveID);
+  state.ctxSip.phoneMuteButtonPressed(state.ctxSip.callActiveID);
 };
 export const pressHold = ({ state }) => {
   state.isHold = !state.isHold;
-  ctxSip.phoneHoldButtonPressed(ctxSip.callActiveID);
+  state.ctxSip.phoneHoldButtonPressed(state.ctxSip.callActiveID);
 };
 export const initTransfer = (
   { commit, state },
@@ -231,7 +230,7 @@ export const initTransfer = (
     }
   }
 
-  if (ctxSip.currentSession.numbers_in_call.includes(String(transferTarget))) {
+  if (state.ctxSip.currentSession.numbers_in_call.includes(String(transferTarget))) {
     // alertError(
     //   `No se puede transferir al número ${transferTarget} porque ya esta en la llamada`
     // );
