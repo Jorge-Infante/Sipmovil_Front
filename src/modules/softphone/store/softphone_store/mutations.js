@@ -100,6 +100,7 @@ export const SET_PHONE_STATE = (state, { phoneVar, phoneState }) => {
   state[phoneVar] = phoneState;
 };
 export const UPDATE_CALL_INFO = (state, callInfo) => {
+  console.log('UPDATE CALL INFO <------');
   Object.assign(state.callInfo, callInfo);
 };
 export const UPDATE_CONFERENCE_INFO = (state, conferenceInfo) => {
@@ -209,6 +210,7 @@ export const SET_CONTACTS = (state, contacts) => {
   state.browserContacts = contacts;
 };
 export const SHOW_DIALOG = (state, type) => {
+  console.log('EL TYPEEEEEEE: ',type);
   let title = "";
   switch (type) {
     case "warn":
@@ -221,9 +223,11 @@ export const SHOW_DIALOG = (state, type) => {
       title = "Agregar miembro conferencia";
       break;
   }
+  console.log('el valor actual : ',state.showBrowser);
   state.showBrowser = true;
   state.browserTitle = title;
   state.browserAction = type;
+  console.log('el valor nuevo : ',state.showBrowser);
 };
 export const CLOSE_DIALOG = (state) => {
   state.showBrowser = false;

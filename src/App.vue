@@ -8,6 +8,7 @@ import vueApp from "@/store";
 import { defineAsyncComponent } from 'vue';
 import { mapState } from 'vuex';
 import {ctxSipConfig,ctxSipConfigFunc} from '@/modules/softphone/ctxsip/ctxSip_config'
+import {connectAsteriskSocket} from '@/modules/softphone/ctxsip/ctxSip_config'
 export default {
   name: "App",
 
@@ -29,6 +30,8 @@ export default {
       ctxSipConfigFunc(ctxsip,newUserInfo)
       console.log('CTXSIP CONFIG: ',ctxsip.config);
       vueApp.commit('softphone_store/CTXSIP_STATE',ctxsip)
+      connectAsteriskSocket(ctxsip);
+
     }
   }
 };

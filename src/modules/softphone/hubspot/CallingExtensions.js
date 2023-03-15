@@ -10,9 +10,10 @@ const options = {
       /* HubSpot is ready to receive messages. */
     },
     onDialNumber: (event) => {
-      vueApp.commit("softphone_store/HUBSPOT_DIAL_NUMBER", {phoneNumber:event.phoneNumber, ownerId:event.ownerId});
+      vueApp.commit("softphone_store/HUBSPOT_DIAL_NUMBER", {phoneNumber:event.phoneNumber, ownerId:event.portalId});
       vueApp.dispatch("auth_store/authUser");
-      console.log("onDialNumber: ", event); 
+      console.log("onDialNumber: ", event);
+      
       /* Dial a number */
     },
     onEngagementCreated: (event) => {

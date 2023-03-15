@@ -157,6 +157,7 @@ export const preTranslateNumber = ({ state }) => {
   );
 };
 export const acceptCall = ({ commit, state }) => {
+  console.log('AcceptCallState:',state);
   state.ctxSip.clickToDial = null;
   state.ctxSip.stopRingTone();
   state.showCallButton = false;
@@ -164,7 +165,7 @@ export const acceptCall = ({ commit, state }) => {
   state.ctxSip.fireAnswerEvent();
 };
 export const answerCall = ({ commit, state }) => {
-  console.log(state);
+  console.log('answerCallState:',state);
   state.ctxSip.clickToDial = null;
   commit("ANSWER_CALL");
   commit("INIT_STATISTIC");

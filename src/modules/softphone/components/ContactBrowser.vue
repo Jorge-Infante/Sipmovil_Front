@@ -1,6 +1,7 @@
 <script>
 import { mapState } from "vuex";
 import { mapActions } from "vuex";
+import vueApp from "@/store";
 
 console.log("contact browser mounted");
 export default {
@@ -23,13 +24,14 @@ export default {
       "browserContacts",
       "browserAction",
       "userInConference",
+      "showBrowser"
     ]),
-    showBrowser: {
+    show_browser: {
       get() {
-        return this.$store.state.showBrowser;
+        return this.showBrowser;
       },
       set(newValue) {
-        return this.$store.commit("SET_PHONE_STATE", {
+        return vueApp.commit("softphone_store/SET_PHONE_STATE", {
           phoneVar: "showBrowser",
           phoneState: newValue,
         });
@@ -37,9 +39,11 @@ export default {
     },
   },
   methods: {
-    ...mapActions('softphone_store',["setContacts", "closeDialog"]),
+    ...mapActions('softphone_store',["setContacts", "closeDialog","callConferenceMember","addConferenceMember","initTransfer"]),
     filterContacts() {
       let query = this.query.toLowerCase();
+      console.log('Los contactos:',this.browserContacts);
+      console.log('Valor del query: ',query);
       if (query == "") {
         this.filteredContacts = [];
         return;
@@ -52,6 +56,7 @@ export default {
           );
         })
         .slice(0, 5);
+      console.log('Los contactos filtrados: ',this.filterContacts);
     },
     chooseContact(number) {
       if (number == "") {
@@ -59,27 +64,23 @@ export default {
       }
 
       if (this.browserAction == "conference") {
-        // this.$store.commit('SET_PHONE_STATE', { phoneVar: 'extensionAdded', phoneState: number })
-        this.$store.dispatch("callConferenceMember", number);
+        this.callConferenceMember(number);
         let targetAccount = number;
         if (number.length == 3) {
           targetAccount = this.browserContacts.filter(
             (c) => c.type == "ext" && c.extension == number
           )[0].unique_id;
         }
-        this.$store.commit("SET_PHONE_STATE", {
+        vueApp.commit("softphone_store/SET_PHONE_STATE", {
           phoneVar: "targetConferenceEndpoint",
           phoneState: targetAccount,
         });
       }
 
       if (this.userInConference == true) {
-        this.$store.dispatch("addConferenceMember", number);
+        this.addConferenceMember(number);
       } else {
-        // if (this.browserAction == 'conference') {
-        //   this.$store.dispatch('callConferenceMember', number)
-        // }
-        this.$store.dispatch("initTransfer", {
+        this.initTransfer({
           transferType: this.browserAction,
           transferTarget: number,
         });
@@ -90,14 +91,17 @@ export default {
       this.query = "";
     },
   },
-  created() {
-    this.setContacts();
-  },
+  watch: {
+    showBrowser (newUserInfo, oldUserInfo) {
+      this.setContacts();
+      console.log('---- > Nuevo: ',newUserInfo, '---- >Viejo: ',oldUserInfo);
+    }
+  }
 };
 </script>
 <template>
   <div class="text-center">
-    <v-dialog v-model="showBrowser" width="300">
+    <v-dialog v-model="show_browser" width="300">
       <v-card>
         <v-card-title class="headline grey lighten-2">
           {{ browserTitle }}

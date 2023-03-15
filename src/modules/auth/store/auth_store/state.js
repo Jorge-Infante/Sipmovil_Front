@@ -6,5 +6,6 @@ export default () => ({
     User: "",
     WSServer: "",
     Token: "",
+    User_id:""
   },
 });

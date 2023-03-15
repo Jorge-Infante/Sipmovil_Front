@@ -16,6 +16,7 @@ export const authUser = async ({ commit, rootState }) => {
     User: user.sipData.account,
     WSServer: `wss://${user.asteriskServer.serverName}:${user.asteriskServer.serverPort}/ws`,
     Token: user.token,
+    User_id:user.userId
   };
 
   

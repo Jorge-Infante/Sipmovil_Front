@@ -13,6 +13,7 @@
     "axios": "^1.3.3",
     "core-js": "^3.8.3",
     "cors": "^2.8.5",
+    "howler": "^2.2.3",
     "roboto-fontface": "*",
     "sip.js": "^0.21.2",
     "vue": "^3.2.13",

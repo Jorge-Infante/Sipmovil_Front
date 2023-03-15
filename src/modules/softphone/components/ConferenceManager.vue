@@ -51,9 +51,9 @@ export default {
     },
   },
   methods: {
-    ...mapActions('softphone_store',["toggleConferenceRecord"]),
+    ...mapActions('softphone_store',["toggleConferenceRecord","removeConferenceMember"]),
     removeMember(member) {
-      this.$store.dispatch("removeConferenceMember", member);
+      this.removeConferenceMember(member);
     },
     closeOptions() {
       //Ajustar las actions

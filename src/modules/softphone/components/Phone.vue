@@ -1,7 +1,7 @@
 <script>
-import {mapState}  from "vuex"
+import { mapState } from "vuex";
 
-console.log('Phone component mounted');
+console.log("Phone component mounted");
 export default {
   data() {
     return {
@@ -20,35 +20,37 @@ export default {
         left: "0px",
         height: "100%",
       },
-    }
+    };
   },
   computed: {
-    ...mapState('softphone_store',[
-      'keyboardActive', 
-      'userInConference', 
-      'showConferenceOptions',
-      'isMobileDevice',
-      ])
+    ...mapState("softphone_store", [
+      "keyboardActive",
+      "userInConference",
+      "showConferenceOptions",
+      "isMobileDevice",
+    ]),
   },
-  components:{
+  components: {
     PhoneStatusBar,
     StatusScreen,
     CallScreen,
     ConferenceManager,
     CallControls,
-    KeyBoard
+    KeyBoard,
+    ContactBrowser,
   },
-  mounted(){
+  mounted() {
     console.log(extensions.onDialNumber);
-  }
+  },
 };
-import PhoneStatusBar from './PhoneStatusBar.vue';
-import StatusScreen from './StatusScreen.vue';
-import CallScreen from './CallScreen.vue';
-import ConferenceManager from './ConferenceManager.vue';
-import CallControls from './CallControls.vue';
-import KeyBoard from './KeyBoard.vue';
-import {extensions}  from '../hubspot/CallingExtensions.js'
+import PhoneStatusBar from "./PhoneStatusBar.vue";
+import StatusScreen from "./StatusScreen.vue";
+import CallScreen from "./CallScreen.vue";
+import ConferenceManager from "./ConferenceManager.vue";
+import CallControls from "./CallControls.vue";
+import KeyBoard from "./KeyBoard.vue";
+import ContactBrowser from "./ContactBrowser.vue";
+import { extensions } from "../hubspot/CallingExtensions.js";
 </script>
 
 <template>
@@ -65,10 +67,9 @@ import {extensions}  from '../hubspot/CallingExtensions.js'
       <CallScreen
         v-else-if="!keyboardActive && !showConferenceOptions"
       ></CallScreen>
-      <ConferenceManager
-        v-else-if="showConferenceOptions"
-      ></ConferenceManager>
-      <CallControls></CallControls>
+      <ConferenceManager v-else-if="showConferenceOptions"></ConferenceManager>
+      <CallControls> </CallControls>
+      <ContactBrowser> </ContactBrowser>
     </v-card-text>
   </v-card>
 </template>

@@ -88,10 +88,12 @@ export default {
       "isMobileDevice",
       "disableCallAnswer",
       "disableCallHangUp",
+      "keyboardActive",
+      "showBrowser"
     ]),
     keyboardActive() {
       console.log("keyboard active");
-      return this.$store.state.keyboardActive ? "#007bff" : "#272727";
+      return this.keyboardActive ? "#007bff" : "#272727";
     },
   },
   methods: {
@@ -104,7 +106,7 @@ export default {
       "warnTranferAction",
       "pressMute",
       "pressHold",
-      "acceptCall"
+      "acceptCall",
     ]),
     toggleMute() {
       console.log("toogle mute");
@@ -180,7 +182,7 @@ export default {
       // }
       this.hangupCall()
     },
-    showDialog(type) {
+    show_Dialog(type) {
       if (
         (type == "blind" || type == "warn") &&
         this.userInConference == true
@@ -190,12 +192,13 @@ export default {
         // );
         return;
       }
+      console.log('----- type : ',type);
       this.showDialog(type)
     },
     warnTranferAction(phase) {
       this.warnTranferAction(phase)
     },
-  },
+  }
 };
 </script>
 <template>
@@ -244,7 +247,7 @@ export default {
         cols="2"
         :style="inCallButtonStyle"
         v-ripple
-        @click="showDialog('blind')"
+        @click="show_Dialog('blind')"
         title="Transferencia Ciega"
       >
         <span
@@ -302,7 +305,7 @@ export default {
         cols="2"
         :style="inCallButtonStyle"
         v-ripple
-        @click="showDialog('warn')"
+        @click="show_Dialog('warn')"
         title="Transferencia Atendida"
       >
         <span
@@ -315,7 +318,7 @@ export default {
         cols="2"
         :style="inCallButtonStyle"
         v-ripple
-        @click="showDialog('conference')"
+        @click="show_Dialog('conference')"
         title="Conferencia"
       >
         <span

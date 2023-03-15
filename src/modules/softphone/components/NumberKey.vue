@@ -22,9 +22,8 @@ export default {
   methods: {
     ...mapActions("softphone_store", ["pressDigit"]),
     appendDigit() {
-      console.log("appendDigit");
+      console.log("appendDigit", this.digit);
       this.pressDigit(this.digit);
-      // this.$store.dispatch("pressDigit", this.digit);
     },
   },
   computed: {
@@ -88,7 +87,7 @@ export default {
             let diffTime = Math.abs(finishEvent - initEvent);
             if (diffTime < 1000) {
               //cuadrar action
-              // vueApp.$store.dispatch("pressDigit", binding.value.number);
+              this.pressDigit(binding.value.number);
             }
             clearTimeout(pressTimer);
             pressTimer = null;
@@ -99,7 +98,7 @@ export default {
           console.log(e);
           // binding.value(e)
           //Cuadrar action
-          // vueApp.$store.dispatch("pressDigit", binding.value.symbol);
+          this.pressDigit(binding.value.symbol);
         };
 
         // Add Event listeners
@@ -114,12 +113,6 @@ export default {
     },
   },
 };
-// const props = defineProps({
-//   keyData: {
-//     type: Object,
-//     required: true,
-//   },
-// });
 </script>
 <template>
   <v-col cols="4" :style="{ padding: '0px', paddingTop: '2px' }">
@@ -137,6 +130,7 @@ export default {
       elevation="3"
       :small="smallSize"
       :medium="!smallSize"
+      @click="appendDigit(digit)"
       v-longpressed="{ symbol: '+', number: '0' }"
       :style="isMobileDevice ? mobileButtonStyle : {}"
       >{{ digit }}</v-btn
