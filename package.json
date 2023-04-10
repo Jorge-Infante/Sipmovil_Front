@@ -15,7 +15,7 @@
     "cors": "^2.8.5",
     "howler": "^2.2.3",
     "roboto-fontface": "*",
-    "sip.js": "^0.21.2",
+    "sip.js": "^0.7.8",
     "vue": "^3.2.13",
     "vuetify": "^3.0.0-beta.0",
     "vuex": "^4.1.0",

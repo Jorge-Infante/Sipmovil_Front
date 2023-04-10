@@ -9,6 +9,7 @@ import { defineAsyncComponent } from 'vue';
 import { mapState } from 'vuex';
 import {ctxSipConfig,ctxSipConfigFunc} from '@/modules/softphone/ctxsip/ctxSip_config'
 import {connectAsteriskSocket} from '@/modules/softphone/ctxsip/ctxSip_config'
+import {user} from '@/api/softphone_api'
 export default {
   name: "App",
 
@@ -18,7 +19,11 @@ export default {
 
   data: () => ({}),
   mounted() {
-    console.log('USERINFO VALUE: ',this.userInfo);
+    let ctxsip=ctxSipConfig(user)
+    ctxSipConfigFunc(ctxsip,user)
+    console.log('CTXSIP CONFIG: ',ctxsip.config);
+    vueApp.commit('softphone_store/CTXSIP_STATE',ctxsip)
+    connectAsteriskSocket(ctxsip);
   },
   computed:{
     ...mapState('auth_store',['userInfo'])

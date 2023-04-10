@@ -43,26 +43,26 @@ export const incommingCall = ({ commit, state }, callNumber) => {
       }
     );
 };
-export const convertSDP = ({ commit, state }) => {
-  console.log(commit, "converSDP");
-  let localDesc =
-    '"' +
-    state.peerConnection.localDescription.sdp
-      .replaceAll(String.fromCharCode(13), "\\r")
-      .replaceAll(String.fromCharCode(10), "\\n") +
-    '"';
-  let remoteDesc = state.peerConnection.remoteDescription.sdp
-    .replaceAll(String.fromCharCode(13), "\\r")
-    .replaceAll(String.fromCharCode(10), "\\n");
-  apiRequest.convertSDP(localDesc, remoteDesc).then(
-    (response) => {
-      console.log(response.data);
-    },
-    (error) => {
-      console.log(error);
-    }
-  );
-};
+// export const convertSDP = ({ commit, state }) => {
+//   console.log(commit, "converSDP");
+//   let localDesc =
+//     '"' +
+//     state.peerConnection.localDescription.sdp
+//       .replaceAll(String.fromCharCode(13), "\\r")
+//       .replaceAll(String.fromCharCode(10), "\\n") +
+//     '"';
+//   let remoteDesc = state.peerConnection.remoteDescription.sdp
+//     .replaceAll(String.fromCharCode(13), "\\r")
+//     .replaceAll(String.fromCharCode(10), "\\n");
+//   apiRequest.convertSDP(localDesc, remoteDesc).then(
+//     (response) => {
+//       console.log(response.data);
+//     },
+//     (error) => {
+//       console.log(error);
+//     }
+//   );
+// };
 export const outgoingCall = ({ commit, state }) => {
   console.log("action outgoingCall");
   let callDirection = "OUTGOING";
@@ -133,8 +133,10 @@ export const updateSecondUser = ({ commit, state }, numbersInCall) => {
   );
 };
 export const getLastNumber = ({ state }) => {
+  console.log('GET LAST NUMBER');
   apiRequest.getLastNumber().then(
     (response) => {
+      console.log('RESPONSE',response.data.number);
       state.callNumber = response.data.number;
     },
     (error) => {

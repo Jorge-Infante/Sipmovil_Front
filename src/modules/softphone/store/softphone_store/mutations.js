@@ -98,6 +98,7 @@ export const SET_CALL_DIRECTION = (state, direction) => {
 };
 export const SET_PHONE_STATE = (state, { phoneVar, phoneState }) => {
   state[phoneVar] = phoneState;
+  console.log('---> SET_PHONE_STATE <---',state[phoneVar]);
 };
 export const UPDATE_CALL_INFO = (state, callInfo) => {
   console.log('UPDATE CALL INFO <------');
