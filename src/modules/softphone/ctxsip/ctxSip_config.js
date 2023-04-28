@@ -1,8 +1,9 @@
 import vueApp from "@/store";
 // import SIP from "libs/phone/sip.min.js";
 import { apiRequest } from "@/api/softphone_api.js";
-import SIP from "sip.js"
+import SIP from "sip.js";
 import { Howl } from "howler";
+import $ from "jquery"
 
 const dtmf_sound = require("libs/phone/sounds/dtmf.mp3");
 const ring_tone = require("libs/phone/sounds/incoming.mp3");
@@ -124,7 +125,7 @@ export const ctxSipConfig = (user) => {
     },
 
     newSession: function (newSess) {
-      console.log("1. [Entro funcion newSession]: "+newSess.direction)
+      console.log("1. [Entro funcion newSession]: " + newSess.direction);
       console.log(newSess);
       ctxSip.currentSession = { session: newSess };
       newSess.displayName =
@@ -135,7 +136,7 @@ export const ctxSipConfig = (user) => {
       ctxSip.callActiveID = newSess.ctxid;
 
       if (newSess.direction === "incoming") {
-        console.log("2. [newSession incoming]: "+newSess.direction)
+        console.log("2. [newSession incoming]: " + newSess.direction);
         let sessionDirection = "incoming";
         console.log(sessionDirection);
         status = "Llamada entrante: " + newSess.displayName;
@@ -158,7 +159,7 @@ export const ctxSipConfig = (user) => {
       // EVENT CALLBACKS
 
       newSess.on("SessionDescriptionHandler-created", function () {
-        console.log("3. [newSession SessionDescriptionHandler]: ")
+        console.log("3. [newSession SessionDescriptionHandler]: ");
         console.log("ENTRO EVENTO PEERCONNECTION");
         // console.log(newSess)
         // console.log(newSess.sessionDescriptionHandler)
@@ -168,7 +169,7 @@ export const ctxSipConfig = (user) => {
       });
 
       newSess.on("progress", function (e) {
-        console.log("4. [newSession progress]: ")
+        console.log("4. [newSession progress]: ");
         console.log(e);
 
         // localStorage.setItem('currentObj', JSON.stringify(e));
@@ -179,7 +180,7 @@ export const ctxSipConfig = (user) => {
       });
 
       newSess.on("connecting", function (e) {
-        console.log("5. [newSession connecting]: ")
+        console.log("5. [newSession connecting]: ");
         // traceLog("Evento connecting direccion: "+ newSess.direction, 1)
         console.log(e);
         vueApp;
@@ -191,7 +192,7 @@ export const ctxSipConfig = (user) => {
       });
 
       newSess.on("accepted", function (e) {
-        console.log("6. [newSession accepted]: ",e)
+        console.log("6. [newSession accepted]: ", e);
 
         // If there is another active call, hold it
         let peerConnection = this.mediaHandler.peerConnection;
@@ -218,31 +219,31 @@ export const ctxSipConfig = (user) => {
       });
 
       newSess.on("hold", function (e) {
-        console.log("7. [newSession hold]: ")
+        console.log("7. [newSession hold]: ");
         console.log(e);
         ctxSip.fireHoldEvent();
       });
 
       newSess.on("unhold", function (e) {
-        console.log("8. [newSession unhold]: ")
+        console.log("8. [newSession unhold]: ");
         console.log(e);
         ctxSip.fireUnHoldEvent(newSess);
       });
 
       newSess.on("muted", function (e) {
-        console.log("9. [newSession muted]: ")
+        console.log("9. [newSession muted]: ");
         console.log(e);
         ctxSip.fireMuteEvent(newSess);
       });
 
       newSess.on("unmuted", function (e) {
-        console.log("10. [newSession unmuted]: ")
+        console.log("10. [newSession unmuted]: ");
         console.log(e);
         ctxSip.fireUnMuteEvent(newSess);
       });
 
       newSess.on("cancel", function (e) {
-        console.log("11. [newSession cancel]: ")
+        console.log("11. [newSession cancel]: ");
         console.log(e);
         // traceLog("Evento cancel direccion: ", 1)
         console.log(ctxSip.clickToDial);
@@ -269,7 +270,7 @@ export const ctxSipConfig = (user) => {
       });
 
       newSess.on("bye", function (e) {
-        console.log("12. [newSession bye]: ")
+        console.log("12. [newSession bye]: ");
         console.log(e);
         // traceLog(e);
         // traceLog("Evento bye direccion: ", 1);
@@ -279,14 +280,14 @@ export const ctxSipConfig = (user) => {
       });
 
       newSess.on("failed", function (e) {
-        console.log("13. [newSession failed]: ")
+        console.log("13. [newSession failed]: ");
         vueApp.dispatch("softphone_store/finishCall");
         // traceLog("Evento failed direccion: ", 1);
         console.log(e);
       });
 
       newSess.on("rejected", function (e) {
-        console.log("14. [newSession rejected]: ")
+        console.log("14. [newSession rejected]: ");
         console.log(e);
         // traceLog("Evento rejected direccion: ", 1)
         vueApp.dispatch("softphone_store/finishCall");
@@ -314,7 +315,7 @@ export const ctxSipConfig = (user) => {
     },
 
     setCallSessionStatus: function (status) {
-      console.log('CallSessionStatus: ',status);
+      console.log("CallSessionStatus: ", status);
       // $('.txtCallStatus').html(status);
     },
 
@@ -364,7 +365,7 @@ export const ctxSipConfig = (user) => {
             stream: ctxSip.Stream,
             constraints: { audio: true, video: false },
             render: {
-              // remote : $('#audioRemote').get()[0]
+               remote : $('#audioRemote').get()[0]
             },
             RTCConstraints: { optional: [{ DtlsSrtpKeyAgreement: "true" }] },
           },
@@ -376,7 +377,7 @@ export const ctxSipConfig = (user) => {
         s.direction = "outgoing";
         ctxSip.newSession(s);
       } catch (e) {
-        console.log(e);
+        console.log(" ---> ERROR AL PASAR STREAM", e, " <---");
       }
     },
 
@@ -440,7 +441,7 @@ export const ctxSipConfig = (user) => {
             stream: ctxSip.Stream,
             constraints: { audio: true, video: false },
             render: {
-              // remote : $('#audioRemote').get()[0]
+              remote : $('#audioRemote').get()[0]
             },
             RTCConstraints: { optional: [{ DtlsSrtpKeyAgreement: "true" }] },
           },
@@ -506,10 +507,6 @@ export const ctxSipConfig = (user) => {
       }
     },
   };
-  return ctxSip;
-};
-
-export const ctxSipConfigFunc = (ctxSip, user) => {
   // Throw an error if the browser can't hack it.
   if (!ctxSip.hasWebRTC()) {
     console.log("ok");
@@ -677,20 +674,22 @@ export const ctxSipConfigFunc = (ctxSip, user) => {
 
   ctxSip.phone.on("invite", function (incomingSession) {
     // traceLog("WEBRTC invite ", 1)
-    console.log('Invite: ',incomingSession);
+    console.log("Invite: ", incomingSession);
     var s = incomingSession;
 
     s.direction = "incoming";
     ctxSip.newSession(s);
   });
+
+  return ctxSip;
 };
 
-export const  connectAsteriskSocket= (ctxSip)=>{
-  console.log('okkkkkkkkkk socket');
+export const connectAsteriskSocket = (ctxSip) => {
+  console.log("okkkkkkkkkk socket");
   const asteriskNotificationSocket = new WebSocket(
     "wss://notificator0.sipmovil.com/ws/notifications/100108480086/"
   );
-  console.log('socket: ',asteriskNotificationSocket);
+  console.log("socket: ", asteriskNotificationSocket);
   asteriskNotificationSocket.binaryType = "arraybuffer";
   asteriskNotificationSocket.onopen = (e) => {
     console.log("Open ASTERISK Notification socket");
@@ -698,7 +697,7 @@ export const  connectAsteriskSocket= (ctxSip)=>{
   };
 
   asteriskNotificationSocket.onmessage = (e) => {
-    console.log('***** ----  on message socket ----- ******');
+    console.log("***** ----  on message socket ----- ******");
     console.log("Asterisk Notification socket message", e.data);
     let { message } = JSON.parse(e.data);
     let data = message.data;
@@ -891,5 +890,4 @@ export const  connectAsteriskSocket= (ctxSip)=>{
       connectAsteriskSocket();
     }, 1000);
   };
-}
-
+};

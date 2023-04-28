@@ -1,15 +1,20 @@
 <template>
 
   <Phone />
+  <audio id="ringtone" src="libs/phone/sounds/incoming.mp3" loop=""></audio>
+  <audio id="ringbacktone" src="libs/phone/sounds/outgoing.mp3" loop=""></audio>
+  <audio id="dtmfTone" src="libs/phone/sounds/dtmf.mp3"></audio>
+  <audio id="audioRemote" ref="audioRemote" autoplay></audio> 
+
 </template>
 
 <script>
 import vueApp from "@/store";
 import { defineAsyncComponent } from 'vue';
 import { mapState } from 'vuex';
-import {ctxSipConfig,ctxSipConfigFunc} from '@/modules/softphone/ctxsip/ctxSip_config'
+import {ctxSipConfig} from '@/modules/softphone/ctxsip/ctxSip_config'
 import {connectAsteriskSocket} from '@/modules/softphone/ctxsip/ctxSip_config'
-import {user} from '@/api/softphone_api'
+// import {user} from '@/api/softphone_api'
 export default {
   name: "App",
 
@@ -19,11 +24,11 @@ export default {
 
   data: () => ({}),
   mounted() {
-    let ctxsip=ctxSipConfig(user)
-    ctxSipConfigFunc(ctxsip,user)
-    console.log('CTXSIP CONFIG: ',ctxsip.config);
-    vueApp.commit('softphone_store/CTXSIP_STATE',ctxsip)
-    connectAsteriskSocket(ctxsip);
+    // let ctxsip=ctxSipConfig(user)
+    // ctxSipConfigFunc(ctxsip,user)
+    // console.log('CTXSIP CONFIG: ',ctxsip.config);
+    // vueApp.commit('softphone_store/CTXSIP_STATE',ctxsip)
+    // connectAsteriskSocket(ctxsip);
   },
   computed:{
     ...mapState('auth_store',['userInfo'])
@@ -32,7 +37,7 @@ export default {
     userInfo (newUserInfo, oldUserInfo) {
       console.log('Nuevo: ',newUserInfo, 'Viejo: ',oldUserInfo);
       let ctxsip=ctxSipConfig(newUserInfo)
-      ctxSipConfigFunc(ctxsip,newUserInfo)
+      // ctxSipConfigFunc(ctxsip,newUserInfo)
       console.log('CTXSIP CONFIG: ',ctxsip.config);
       vueApp.commit('softphone_store/CTXSIP_STATE',ctxsip)
       connectAsteriskSocket(ctxsip);
