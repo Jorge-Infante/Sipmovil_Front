@@ -19,12 +19,12 @@ export default {
     };
   },
   computed: {
-    ...mapState('softphone_store',[
+    ...mapState("softphone_store", [
       "browserTitle",
       "browserContacts",
       "browserAction",
       "userInConference",
-      "showBrowser"
+      "showBrowser",
     ]),
     show_browser: {
       get() {
@@ -39,11 +39,16 @@ export default {
     },
   },
   methods: {
-    ...mapActions('softphone_store',["setContacts", "closeDialog","callConferenceMember","addConferenceMember","initTransfer"]),
+    ...mapActions("softphone_store", [
+      "setContacts",
+      "closeDialog",
+      "callConferenceMember",
+      "addConferenceMember",
+      "initTransfer",
+    ]),
     filterContacts() {
       let query = this.query.toLowerCase();
-      console.log('Los contactos:',this.browserContacts);
-      console.log('Valor del query: ',query);
+      console.log("Valor del query: ", query);
       if (query == "") {
         this.filteredContacts = [];
         return;
@@ -56,7 +61,7 @@ export default {
           );
         })
         .slice(0, 5);
-      console.log('Los contactos filtrados: ',this.filterContacts);
+      console.log("Los contactos filtrados: ", this.filteredContacts);
     },
     chooseContact(number) {
       if (number == "") {
@@ -92,11 +97,11 @@ export default {
     },
   },
   watch: {
-    showBrowser (newUserInfo, oldUserInfo) {
+    showBrowser(newUserInfo, oldUserInfo) {
       this.setContacts();
-      console.log('---- > Nuevo: ',newUserInfo, '---- >Viejo: ',oldUserInfo);
-    }
-  }
+      console.log("---- > Nuevo: ", newUserInfo, "---- >Viejo: ", oldUserInfo);
+    },
+  },
 };
 </script>
 <template>
@@ -128,10 +133,10 @@ export default {
                 <v-img :src="contact.avatar" :style="avatarStyle"></v-img>
               </v-avatar>
 
-              <v-list-item-title innerHTML="contact.name"></v-list-item-title>
-              <v-list-item-subtitle
-              innerHTML="contact.extension"
-              ></v-list-item-subtitle>
+              <v-list-item-title>{{ contact.name }}</v-list-item-title>
+              <v-list-item-subtitle>{{
+                contact.extension
+              }}</v-list-item-subtitle>
             </v-list-item>
           </v-list>
         </v-card-text>
