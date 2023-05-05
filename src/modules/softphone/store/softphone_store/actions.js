@@ -13,13 +13,14 @@ export const setCallEvents = ({ commit /*state*/ }, callEvents) => {
     phoneState: filteredEvents,
   });
 };
-export const incommingCall = ({ commit, state }, callNumber) => {
-  console.log(state);
+export const incommingCall = ({ commit, state,rootState }, callNumber) => {
+  console.log('Action INCOMING: ',state);
+  const token = rootState.auth_store.userInfo.Token
   let callDirection = "INCOMING";
   commit("SET_CALL_DIRECTION", callDirection);
 
   apiRequest
-    .getLabel(callDirection, callNumber, "{{request.user.id}}", "call")
+    .getLabel(callDirection, callNumber, rootState.auth_store.User_id, "call",token)
     .then(
       (response) => {
         let callInfo = response.data;
@@ -63,7 +64,9 @@ export const incommingCall = ({ commit, state }, callNumber) => {
 //     }
 //   );
 // };
-export const outgoingCall = ({ commit, state }) => {
+export const outgoingCall = ({ commit, state, rootState }) => {
+  const user =  rootState.auth_store.userInfo
+  const token = user.Token
   console.log("action outgoingCall");
   let callDirection = "OUTGOING";
   let number = state.callNumber;
@@ -73,7 +76,7 @@ export const outgoingCall = ({ commit, state }) => {
   }
   commit("SET_CALL_DIRECTION", callDirection);
   apiRequest
-    .getLabel(callDirection, number, 239, "call")
+    .getLabel(callDirection, number, user.User_id, "call", token)
     .then(
       (response) => {
         let callInfo = response.data;
@@ -132,9 +135,10 @@ export const updateSecondUser = ({ commit, state }, numbersInCall) => {
     }
   );
 };
-export const getLastNumber = ({ state }) => {
-  console.log('GET LAST NUMBER');
-  apiRequest.getLastNumber().then(
+export const getLastNumber = ({ state, rootState }) => {
+  const token = rootState.auth_store.userInfo.Token
+  console.log('Action GET LAST NUMBER');
+  apiRequest.getLastNumber(token,rootState.auth_store.userInfo.User).then(
     (response) => {
       console.log('RESPONSE',response.data.number);
       state.callNumber = response.data.number;
@@ -144,12 +148,11 @@ export const getLastNumber = ({ state }) => {
     }
   );
 };
-export const preTranslateNumber = ({ state }) => {
-  console.log("Actions prestraslate: ", state.callNumber);
-  console.log(typeof(state.callNumber));
-  apiRequest.preTranslateNumber(state.callNumber).then(
+export const preTranslateNumber = ({ state,rootState }) => {
+  const token = rootState.auth_store.userInfo.Token
+  console.log("Action prestraslate number: ", state.callNumber);
+  apiRequest.preTranslateNumber(token,state.callNumber).then(
     (response) => {
-      console.log("ENTRO action preTranslateNumber");
       console.log(response);
       state.callNumber = response.data;
     },
@@ -214,9 +217,12 @@ export const pressHold = ({ state }) => {
   state.ctxSip.phoneHoldButtonPressed(state.ctxSip.callActiveID);
 };
 export const initTransfer = (
-  { commit, state },
+  { commit, state, rootState },
   { transferType, transferTarget }
 ) => {
+  const user =  rootState.auth_store.userInfo
+  const token = user.Token
+  const call_id = state.ctxSip.currentSession.call_id
   console.log("commit en init tranfer:", commit);
   // target = window.prompt('Ingrese número destino', '');
 
@@ -241,7 +247,7 @@ export const initTransfer = (
   }
 
   apiRequest
-    .pbxTransfer(transferType, transferTarget)
+    .pbxTransfer(transferType, transferTarget,call_id, user, token)
     .then((response) => {
       console.log(response);
     })

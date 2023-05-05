@@ -13,11 +13,6 @@ export const user = {
 export const apiClient = axios.create({
   baseURL: "https://test.sipmovil.com/",
   withCredentials: false,
-  headers: {
-    "Content-Type": "application/json",
-    Accept: "application/json",
-    Authorization: "Token 8ef5e709a35dea0d1a5a4f394984369c1e62ec9d",
-  },
 });
 export const apiClientForm = axios.create({
   baseURL: "https://test.sipmovil.com/",
@@ -29,7 +24,9 @@ export const apiClientForm = axios.create({
 });
 
 export const apiRequest = {
-  getLabel(callDirection, number, userId, optionPush) {
+  getLabel(callDirection, number, userId, optionPush,token) {
+    console.log('----> token: ',token, '<----');
+    apiClient.defaults.headers.common['Authorization'] = `Token ${token}`;
     return apiClient.get(
       `/api/pbx/get_call_info?call_direction=${callDirection}&number=${number}&user_id=${userId}&option_push=${optionPush}`
     );
@@ -42,17 +39,21 @@ export const apiRequest = {
       `/api/pbx/translate_sdp?local=${localDescription}&remote=${remoteDescription}`
     );
   },
-  getLastNumber() {
-    return apiClient.get(`/api/webrtc/last_call?endpoint=${user.User}`);
+  getLastNumber(token,user) {
+    console.log('----> token: ',token, '<----');
+    apiClient.defaults.headers.common['Authorization'] = `Token ${token}`;
+    return apiClient.get(`/api/webrtc/last_call?endpoint=${user}`);
   },
-  preTranslateNumber(callNumber) {
+  preTranslateNumber(token,callNumber) {
+    apiClient.defaults.headers.common['Authorization'] = `Token ${token}`;
     return apiClient.post(`/api/pbx/pre_translate?number=${callNumber}`);
   },
-  //   pbxTransfer(transferType, transferTarget) {
-  //     return apiClient.post(
-  //       `/zoho/api/zoho_transfer?endpoint=${user.User}&target=${transferTarget}&call_id=${ctxSip.currentSession.call_id}&type=${transferType}`
-  //     );
-  //   },
+    pbxTransfer(transferType, transferTarget,call_id,user, token) {
+      apiClient.defaults.headers.common['Authorization'] = `Token ${token}`;
+      return apiClient.post(
+        `/zoho/api/zoho_transfer?endpoint=${user.User}&target=${transferTarget}&call_id=${call_id}&type=${transferType}`
+      );
+    },
   //   warnTransfer(transferPhase) {
   //     return apiClient.post(
   //       `/zoho/api/transfer_event?endpoint=${user.User}&phase=${transferPhase}&call_id=${ctxSip.currentSession.call_id}`
