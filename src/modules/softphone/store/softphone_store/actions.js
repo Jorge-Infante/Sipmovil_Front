@@ -256,11 +256,14 @@ export const initTransfer = (
       console.log(error);
     });
 };
-export const warnTranferAction = ({ commit, state }, transferPhase) => {
-  console.log(commit);
+export const warnTranferAction = ({ state, rootState }, transferPhase) => {
+  const user =  rootState.auth_store.userInfo
+  const token = user.Token
+  const call_id = state.ctxSip.currentSession.call_id
+  console.log('--->pashe: ',transferPhase,'<---','----> call_id: ',call_id,'<----');
   state.warnTransfer = false;
   apiRequest
-    .warnTransfer(transferPhase)
+    .warnTransfer(transferPhase,call_id,user,token)
     .then((response) => {
       console.log(response);
     })

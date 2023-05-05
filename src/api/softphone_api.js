@@ -24,9 +24,9 @@ export const apiClientForm = axios.create({
 });
 
 export const apiRequest = {
-  getLabel(callDirection, number, userId, optionPush,token) {
-    console.log('----> token: ',token, '<----');
-    apiClient.defaults.headers.common['Authorization'] = `Token ${token}`;
+  getLabel(callDirection, number, userId, optionPush, token) {
+    console.log("----> token: ", token, "<----");
+    apiClient.defaults.headers.common["Authorization"] = `Token ${token}`;
     return apiClient.get(
       `/api/pbx/get_call_info?call_direction=${callDirection}&number=${number}&user_id=${userId}&option_push=${optionPush}`
     );
@@ -39,26 +39,28 @@ export const apiRequest = {
       `/api/pbx/translate_sdp?local=${localDescription}&remote=${remoteDescription}`
     );
   },
-  getLastNumber(token,user) {
-    console.log('----> token: ',token, '<----');
-    apiClient.defaults.headers.common['Authorization'] = `Token ${token}`;
+  getLastNumber(token, user) {
+    console.log("----> token: ", token, "<----");
+    apiClient.defaults.headers.common["Authorization"] = `Token ${token}`;
     return apiClient.get(`/api/webrtc/last_call?endpoint=${user}`);
   },
-  preTranslateNumber(token,callNumber) {
-    apiClient.defaults.headers.common['Authorization'] = `Token ${token}`;
+  preTranslateNumber(token, callNumber) {
+    apiClient.defaults.headers.common["Authorization"] = `Token ${token}`;
     return apiClient.post(`/api/pbx/pre_translate?number=${callNumber}`);
   },
-    pbxTransfer(transferType, transferTarget,call_id,user, token) {
-      apiClient.defaults.headers.common['Authorization'] = `Token ${token}`;
-      return apiClient.post(
-        `/zoho/api/zoho_transfer?endpoint=${user.User}&target=${transferTarget}&call_id=${call_id}&type=${transferType}`
-      );
-    },
-  //   warnTransfer(transferPhase) {
-  //     return apiClient.post(
-  //       `/zoho/api/transfer_event?endpoint=${user.User}&phase=${transferPhase}&call_id=${ctxSip.currentSession.call_id}`
-  //     );
-  //   },
+  pbxTransfer(transferType, transferTarget, call_id, user, token) {
+    apiClient.defaults.headers.common["Authorization"] = `Token ${token}`;
+    return apiClient.post(
+      `/zoho/api/zoho_transfer?endpoint=${user.User}&target=${transferTarget}&call_id=${call_id}&type=${transferType}`
+    );
+  },
+  warnTransfer(transferPhase,call_id,user,token) {
+    console.log('WARNTRANFER REQUEST: ',transferPhase,call_id,user,token);
+    apiClient.defaults.headers.common["Authorization"] = `Token ${token}`;
+    return apiClient.post(
+      `/zoho/api/transfer_event?endpoint=${user.User}&phase=${transferPhase}&call_id=${call_id}`
+    );
+  },
   //   rejectClickToCall(reason) {
   //     let from = ctxSip.clickToDial.from;
   //     let to = ctxSip.clickToDial.to;

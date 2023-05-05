@@ -195,7 +195,7 @@ export default {
       console.log('----- type : ',type);
       this.showDialog(type)
     },
-    warnTranferAction(phase) {
+    selectWarnTranferAction(phase) {
       this.warnTranferAction(phase)
     },
   }
@@ -332,7 +332,7 @@ export default {
       <v-col
         :style="inCallButtonStyle"
         v-ripple
-        @click="warnTranferAction('resume')"
+        @click="selectWarnTranferAction('resume')"
       >
         <span
           :style="{
@@ -348,7 +348,7 @@ export default {
       <v-col
         :style="inCallButtonStyle"
         v-ripple
-        @click="warnTranferAction('transfer')"
+        @click="selectWarnTranferAction('transfer')"
       >
         <span
           :style="{
