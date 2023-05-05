@@ -13,14 +13,20 @@ export const setCallEvents = ({ commit /*state*/ }, callEvents) => {
     phoneState: filteredEvents,
   });
 };
-export const incommingCall = ({ commit, state,rootState }, callNumber) => {
-  console.log('Action INCOMING: ',state);
-  const token = rootState.auth_store.userInfo.Token
+export const incommingCall = ({ commit, state, rootState }, callNumber) => {
+  console.log("Action INCOMING: ", state);
+  const token = rootState.auth_store.userInfo.Token;
   let callDirection = "INCOMING";
   commit("SET_CALL_DIRECTION", callDirection);
 
   apiRequest
-    .getLabel(callDirection, callNumber, rootState.auth_store.User_id, "call",token)
+    .getLabel(
+      callDirection,
+      callNumber,
+      rootState.auth_store.User_id,
+      "call",
+      token
+    )
     .then(
       (response) => {
         let callInfo = response.data;
@@ -44,29 +50,30 @@ export const incommingCall = ({ commit, state,rootState }, callNumber) => {
       }
     );
 };
-// export const convertSDP = ({ commit, state }) => {
-//   console.log(commit, "converSDP");
-//   let localDesc =
-//     '"' +
-//     state.peerConnection.localDescription.sdp
-//       .replaceAll(String.fromCharCode(13), "\\r")
-//       .replaceAll(String.fromCharCode(10), "\\n") +
-//     '"';
-//   let remoteDesc = state.peerConnection.remoteDescription.sdp
-//     .replaceAll(String.fromCharCode(13), "\\r")
-//     .replaceAll(String.fromCharCode(10), "\\n");
-//   apiRequest.convertSDP(localDesc, remoteDesc).then(
-//     (response) => {
-//       console.log(response.data);
-//     },
-//     (error) => {
-//       console.log(error);
-//     }
-//   );
-// };
+export const convertSDP = ({ commit, state, rootState }) => {
+  const user = rootState.auth_store.userInfo;
+  console.log(commit, "converSDP");
+  let localDesc =
+    '"' +
+    state.peerConnection.localDescription.sdp
+      .replaceAll(String.fromCharCode(13), "\\r")
+      .replaceAll(String.fromCharCode(10), "\\n") +
+    '"';
+  let remoteDesc = state.peerConnection.remoteDescription.sdp
+    .replaceAll(String.fromCharCode(13), "\\r")
+    .replaceAll(String.fromCharCode(10), "\\n");
+  apiRequest.convertSDP(localDesc, remoteDesc, user.Token).then(
+    (response) => {
+      console.log(response.data);
+    },
+    (error) => {
+      console.log(error);
+    }
+  );
+};
 export const outgoingCall = ({ commit, state, rootState }) => {
-  const user =  rootState.auth_store.userInfo
-  const token = user.Token
+  const user = rootState.auth_store.userInfo;
+  const token = user.Token;
   console.log("action outgoingCall");
   let callDirection = "OUTGOING";
   let number = state.callNumber;
@@ -75,53 +82,53 @@ export const outgoingCall = ({ commit, state, rootState }) => {
     return;
   }
   commit("SET_CALL_DIRECTION", callDirection);
-  apiRequest
-    .getLabel(callDirection, number, user.User_id, "call", token)
-    .then(
-      (response) => {
-        let callInfo = response.data;
-        callInfo.info = `${callInfo.info.split("-")[0]}- ${state.callNumber}`;
-        callInfo["status"] = "Llamando";
-        commit("UPDATE_CALL_INFO", callInfo);
-        state.showCallButton = false;
-        commit("START_CALL");
-        state.ctxSip.phoneCallButtonPressed();
+  apiRequest.getLabel(callDirection, number, user.User_id, "call", token).then(
+    (response) => {
+      let callInfo = response.data;
+      callInfo.info = `${callInfo.info.split("-")[0]}- ${state.callNumber}`;
+      callInfo["status"] = "Llamando";
+      commit("UPDATE_CALL_INFO", callInfo);
+      state.showCallButton = false;
+      commit("START_CALL");
+      state.ctxSip.phoneCallButtonPressed();
 
-        // update second user in outgoing call
-        let userInfo = {
-          name: callInfo.label,
-          avatar: callInfo.avatar,
-          extension: callInfo.number,
-        };
-        console.log(userInfo);
-        commit("SET_PHONE_STATE", {
-          phoneVar: "seconduserInfo",
-          phoneState: userInfo,
-        });
-        // Vue.set(state.inCallPeers, 0, {})
-        // Vue.set(state.inCallPeers, 1, userInfo)
-      },
-      (error) => {
-        let callInfo = {
-          status: "Llamando",
-          label: "Desconocido",
-          info: "Número - " + number,
-        };
-        commit("UPDATE_CALL_INFO", callInfo);
-        state.showCallButton = false;
-        commit("START_CALL");
-        state.ctxSip.phoneCallButtonPressed();
-        console.log(error);
-      }
-    );
+      // update second user in outgoing call
+      let userInfo = {
+        name: callInfo.label,
+        avatar: callInfo.avatar,
+        extension: callInfo.number,
+      };
+      console.log(userInfo);
+      commit("SET_PHONE_STATE", {
+        phoneVar: "seconduserInfo",
+        phoneState: userInfo,
+      });
+      // Vue.set(state.inCallPeers, 0, {})
+      // Vue.set(state.inCallPeers, 1, userInfo)
+    },
+    (error) => {
+      let callInfo = {
+        status: "Llamando",
+        label: "Desconocido",
+        info: "Número - " + number,
+      };
+      commit("UPDATE_CALL_INFO", callInfo);
+      state.showCallButton = false;
+      commit("START_CALL");
+      state.ctxSip.phoneCallButtonPressed();
+      console.log(error);
+    }
+  );
   console.log("after AXIOS");
 };
-export const updateSecondUser = ({ commit, state }, numbersInCall) => {
+export const updateSecondUser = (
+  { commit, state, rootState },
+  numbersInCall
+) => {
+  const user = rootState.auth_store.userInfo;
   console.log(state);
-  let secondExtension = numbersInCall.filter(
-    (x) => x != "{{request.user.profile.get_extension}}"
-  )[0];
-  apiRequest.getExtensionInfo(secondExtension).then(
+  let secondExtension = numbersInCall.filter((x) => x != user.Display)[0];
+  apiRequest.getExtensionInfo(secondExtension, user.Token).then(
     (response) => {
       let userInfo = response.data;
       commit("SET_PHONE_STATE", {
@@ -136,11 +143,11 @@ export const updateSecondUser = ({ commit, state }, numbersInCall) => {
   );
 };
 export const getLastNumber = ({ state, rootState }) => {
-  const token = rootState.auth_store.userInfo.Token
-  console.log('Action GET LAST NUMBER');
-  apiRequest.getLastNumber(token,rootState.auth_store.userInfo.User).then(
+  const token = rootState.auth_store.userInfo.Token;
+  console.log("Action GET LAST NUMBER");
+  apiRequest.getLastNumber(token, rootState.auth_store.userInfo.User).then(
     (response) => {
-      console.log('RESPONSE',response.data.number);
+      console.log("RESPONSE", response.data.number);
       state.callNumber = response.data.number;
     },
     (error) => {
@@ -148,10 +155,10 @@ export const getLastNumber = ({ state, rootState }) => {
     }
   );
 };
-export const preTranslateNumber = ({ state,rootState }) => {
-  const token = rootState.auth_store.userInfo.Token
+export const preTranslateNumber = ({ state, rootState }) => {
+  const token = rootState.auth_store.userInfo.Token;
   console.log("Action prestraslate number: ", state.callNumber);
-  apiRequest.preTranslateNumber(token,state.callNumber).then(
+  apiRequest.preTranslateNumber(token, state.callNumber).then(
     (response) => {
       console.log(response);
       state.callNumber = response.data;
@@ -162,7 +169,7 @@ export const preTranslateNumber = ({ state,rootState }) => {
   );
 };
 export const acceptCall = ({ commit, state }) => {
-  console.log('AcceptCallState:',state);
+  console.log("AcceptCallState:", state);
   state.ctxSip.clickToDial = null;
   state.ctxSip.stopRingTone();
   state.showCallButton = false;
@@ -170,13 +177,13 @@ export const acceptCall = ({ commit, state }) => {
   state.ctxSip.fireAnswerEvent();
 };
 export const answerCall = ({ commit, state }) => {
-  console.log('answerCallState:',state);
+  console.log("answerCallState:", state);
   state.ctxSip.clickToDial = null;
   commit("ANSWER_CALL");
   commit("INIT_STATISTIC");
   commit("UPDATE_CALL_INFO", { status: "En llamada" });
 };
-export const hangupCall = ({ commit,state }) => {
+export const hangupCall = ({ commit, state }) => {
   console.log("action hangupCall");
   if (state.ctxSip.clickToDial) {
     // notify zoho click to call rejected
@@ -186,7 +193,7 @@ export const hangupCall = ({ commit,state }) => {
   state.ctxSip.stopRingTone();
   commit("HANGUP_CALL");
 };
-export const finishCall = ({state, commit }) => {
+export const finishCall = ({ state, commit }) => {
   state.ctxSip.stopRingTone();
   state.ctxSip.clickToDial = null;
   const callInfoSurvey = state.ctxSip.currentSession.call_id;
@@ -220,9 +227,9 @@ export const initTransfer = (
   { commit, state, rootState },
   { transferType, transferTarget }
 ) => {
-  const user =  rootState.auth_store.userInfo
-  const token = user.Token
-  const call_id = state.ctxSip.currentSession.call_id
+  const user = rootState.auth_store.userInfo;
+  const token = user.Token;
+  const call_id = state.ctxSip.currentSession.call_id;
   console.log("commit en init tranfer:", commit);
   // target = window.prompt('Ingrese número destino', '');
 
@@ -239,7 +246,9 @@ export const initTransfer = (
     }
   }
 
-  if (state.ctxSip.currentSession.numbers_in_call.includes(String(transferTarget))) {
+  if (
+    state.ctxSip.currentSession.numbers_in_call.includes(String(transferTarget))
+  ) {
     // alertError(
     //   `No se puede transferir al número ${transferTarget} porque ya esta en la llamada`
     // );
@@ -247,7 +256,7 @@ export const initTransfer = (
   }
 
   apiRequest
-    .pbxTransfer(transferType, transferTarget,call_id, user, token)
+    .pbxTransfer(transferType, transferTarget, call_id, user, token)
     .then((response) => {
       console.log(response);
     })
@@ -257,13 +266,20 @@ export const initTransfer = (
     });
 };
 export const warnTranferAction = ({ state, rootState }, transferPhase) => {
-  const user =  rootState.auth_store.userInfo
-  const token = user.Token
-  const call_id = state.ctxSip.currentSession.call_id
-  console.log('--->pashe: ',transferPhase,'<---','----> call_id: ',call_id,'<----');
+  const user = rootState.auth_store.userInfo;
+  const token = user.Token;
+  const call_id = state.ctxSip.currentSession.call_id;
+  console.log(
+    "--->pashe: ",
+    transferPhase,
+    "<---",
+    "----> call_id: ",
+    call_id,
+    "<----"
+  );
   state.warnTransfer = false;
   apiRequest
-    .warnTransfer(transferPhase,call_id,user,token)
+    .warnTransfer(transferPhase, call_id, user, token)
     .then((response) => {
       console.log(response);
     })
@@ -280,10 +296,11 @@ export const setTranferParams = ({ state }, { callId, transferType }) => {
   state.transferCallId = callId;
   state.transferType = transferType;
 };
-export const rejecttranferInvitation = ({ state, commit }) => {
+export const rejecttranferInvitation = ({ state, commit, rootState }) => {
+  const user = rootState.auth_store.userInfo;
   console.log(commit);
   apiRequest
-    .rejecttranferInvitation(state.transferCallId, state.transferType)
+    .rejecttranferInvitation(state.transferCallId, state.transferType, user)
     .then((response) => {
       console.log(response);
     })
@@ -322,9 +339,10 @@ export const callConferenceMember = ({ state, commit }, number) => {
       }
     );
 };
-export const addConferenceMember = ({ state }, member) => {
+export const addConferenceMember = ({ state, rootState }, member) => {
+  const user = rootState.auth_store.userInfo;
   apiRequest
-    .addConferenceMember(state.conferenceId, member)
+    .addConferenceMember(state.conferenceId, member, user)
     .then((response) => {
       console.log(response);
     })
@@ -335,9 +353,10 @@ export const addConferenceMember = ({ state }, member) => {
       console.log(error.message);
     });
 };
-export const removeConferenceMember = ({ state }, member) => {
+export const removeConferenceMember = ({ state, rootState }, member) => {
+  const user = rootState.auth_store.userInfo;
   apiRequest
-    .removeConferenceMember(state.conferenceId, member)
+    .removeConferenceMember(state.conferenceId, member, user)
     .then((response) => {
       console.log(response);
     })
@@ -347,10 +366,11 @@ export const removeConferenceMember = ({ state }, member) => {
       console.log(error);
     });
 };
-export const toggleConferenceRecord = ({ state, commit }) => {
+export const toggleConferenceRecord = ({ state, commit, rootState }) => {
+  const user = rootState.auth_store.userInfo;
   commit("TOGGLE_CONFERENCE_RECORD");
   apiRequest
-    .toggleConferenceRecord(state.conferenceId, state.recordConference)
+    .toggleConferenceRecord(state.conferenceId, state.recordConference, user)
     .then((response) => {
       console.log(response);
     })
@@ -359,9 +379,14 @@ export const toggleConferenceRecord = ({ state, commit }) => {
       console.log(error);
     });
 };
-export const removeInvitedChannel = ({ state, commit }) => {
+export const removeInvitedChannel = ({ state, commit, rootState }) => {
+  const user = rootState.auth_store.userInfo;
   apiRequest
-    .removeInvitedChannel(state.conferenceId, state.targetConferenceEndpoint)
+    .removeInvitedChannel(
+      state.conferenceId,
+      state.targetConferenceEndpoint,
+      user
+    )
     .then((response) => {
       console.log(response);
       commit("REMOVE_INVITED_CHANNEL");
@@ -382,9 +407,10 @@ export const removeInvitedChannel = ({ state, commit }) => {
 // },
 
 // Actions for ContactBrowser Component
-export const setContacts = ({ commit }) => {
+export const setContacts = ({ commit, rootState }) => {
+  const user = rootState.auth_store.userInfo;
   apiRequest
-    .getContacts()
+    .getContacts(user.Token)
     .then((response) => {
       commit("SET_CONTACTS", response.data);
     })
@@ -392,8 +418,9 @@ export const setContacts = ({ commit }) => {
       console.log(error);
     });
 };
-export const setPjsipContacts = ({ state }) => {
-  apiRequest.getPjsipContacts().then(
+export const setPjsipContacts = ({ state, rootState }) => {
+  const user = rootState.auth_store.userInfo;
+  apiRequest.getPjsipContacts(user).then(
     (response) => {
       console.log("setPjsipContacts", response.data);
       state.pjsipContacts = response.data;
@@ -410,4 +437,3 @@ export const showDialog = ({ commit }, type) => {
 export const closeDialog = ({ commit }) => {
   commit("CLOSE_DIALOG");
 };
-
