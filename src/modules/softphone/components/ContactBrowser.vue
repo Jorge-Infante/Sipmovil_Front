@@ -61,6 +61,16 @@ export default {
           );
         })
         .slice(0, 5);
+      this.filteredContacts.map(function (dato) {
+        let media = dato.avatar;
+        console.log("---> MEDIA VALUE --->: ", media);
+        if (dato.avatar.includes("https")) {
+          return
+        }else{
+          dato.avatar = `https://test.sipmovil.com${media}`;
+        }
+        return dato;
+      });
       console.log("Los contactos filtrados: ", this.filteredContacts);
     },
     chooseContact(number) {

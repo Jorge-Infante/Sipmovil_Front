@@ -15,7 +15,7 @@ export const setCallEvents = ({ commit /*state*/ }, callEvents) => {
 };
 export const incommingCall = ({ commit, state, rootState }, callNumber) => {
   console.log("Action INCOMING: ", state);
-  const token = rootState.auth_store.userInfo.Token;
+  const user = rootState.auth_store.userInfo;
   let callDirection = "INCOMING";
   commit("SET_CALL_DIRECTION", callDirection);
 
@@ -23,9 +23,9 @@ export const incommingCall = ({ commit, state, rootState }, callNumber) => {
     .getLabel(
       callDirection,
       callNumber,
-      rootState.auth_store.User_id,
+      user.User_id,
       "call",
-      token
+      user.Token
     )
     .then(
       (response) => {
@@ -73,7 +73,6 @@ export const convertSDP = ({ commit, state, rootState }) => {
 };
 export const outgoingCall = ({ commit, state, rootState }) => {
   const user = rootState.auth_store.userInfo;
-  const token = user.Token;
   console.log("action outgoingCall");
   let callDirection = "OUTGOING";
   let number = state.callNumber;
@@ -82,7 +81,7 @@ export const outgoingCall = ({ commit, state, rootState }) => {
     return;
   }
   commit("SET_CALL_DIRECTION", callDirection);
-  apiRequest.getLabel(callDirection, number, user.User_id, "call", token).then(
+  apiRequest.getLabel(callDirection, number, user.User_id, "call", user.Token).then(
     (response) => {
       let callInfo = response.data;
       callInfo.info = `${callInfo.info.split("-")[0]}- ${state.callNumber}`;
@@ -314,13 +313,14 @@ export const rejecttranferInvitation = ({ state, commit, rootState }) => {
 };
 
 // Actions for call conference
-export const callConferenceMember = ({ state, commit }, number) => {
+export const callConferenceMember = ({ state, commit, rootState }, number) => {
+  const user = rootState.auth_store.userInfo;
   console.log(state);
   console.log("entro accion callConferenceMember");
   let callDirection = "OUTGOING";
 
   apiRequest
-    .getLabel(callDirection, number, "{{request.user.id}}", "call")
+    .getLabel(callDirection, number, user.User_id, "call", user.Token)
     .then(
       (response) => {
         console.log(response);
